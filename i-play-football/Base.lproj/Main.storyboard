@@ -18,21 +18,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="u0U-wu-Y1v">
+                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="arr-Os-Qta">
                                 <rect key="frame" x="0.0" y="965" width="768" height="50"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <items>
-                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="8EC-hc-Wkm"/>
-                                    <barButtonItem title="Home" id="au1-1T-YmK"/>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="dQs-5z-bmP"/>
-                                    <barButtonItem title="Calendar" id="Vcf-jh-OXT"/>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="IBA-jM-6uO"/>
-                                    <barButtonItem title="Feeds" id="UXm-jx-vt9"/>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="pi0-0b-5cB"/>
-                                    <barButtonItem title="Team" id="svy-8O-8BY"/>
-                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="MOx-MC-DfY"/>
-                                </items>
-                            </toolbar>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="u0U-wu-Y1v">
+                                        <rect key="frame" x="0.0" y="0.0" width="768" height="50"/>
+                                        <items>
+                                            <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="8EC-hc-Wkm"/>
+                                            <barButtonItem title="Home" id="au1-1T-YmK"/>
+                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="dQs-5z-bmP"/>
+                                            <barButtonItem title="Calendar" id="Vcf-jh-OXT"/>
+                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="IBA-jM-6uO"/>
+                                            <barButtonItem title="Feeds" id="UXm-jx-vt9"/>
+                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="pi0-0b-5cB"/>
+                                            <barButtonItem title="Team" id="svy-8O-8BY"/>
+                                            <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="MOx-MC-DfY"/>
+                                        </items>
+                                    </toolbar>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>

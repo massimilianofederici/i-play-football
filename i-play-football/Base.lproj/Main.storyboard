@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="ipad9_7" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="M2R-UT-CiX">
+    <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -10,42 +10,74 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Title-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Team View-->
+        <scene sceneID="bNw-Gy-s17">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="i_play_football" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
+                <viewController id="Uvb-bF-0KT" userLabel="Team View" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="q5I-EY-qrf">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="arr-Os-Qta">
-                                <rect key="frame" x="0.0" y="965" width="768" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="u0U-wu-Y1v">
-                                        <rect key="frame" x="0.0" y="0.0" width="768" height="50"/>
-                                        <items>
-                                            <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="8EC-hc-Wkm"/>
-                                            <barButtonItem title="Home" id="au1-1T-YmK"/>
-                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="dQs-5z-bmP"/>
-                                            <barButtonItem title="Calendar" id="Vcf-jh-OXT"/>
-                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="IBA-jM-6uO"/>
-                                            <barButtonItem title="Feeds" id="UXm-jx-vt9"/>
-                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="pi0-0b-5cB"/>
-                                            <barButtonItem title="Team" id="svy-8O-8BY"/>
-                                            <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="MOx-MC-DfY"/>
-                                        </items>
-                                    </toolbar>
-                                </subviews>
-                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N7V-IP-Ehu">
+                                <rect key="frame" x="332" y="447" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="N7V-IP-Ehu" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="QPK-zv-Jfu" secondAttribute="leading" id="0a7-8H-nqj"/>
+                            <constraint firstAttribute="trailing" secondItem="N7V-IP-Ehu" secondAttribute="trailing" constant="-54" id="1y2-bh-M1Q"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="N7V-IP-Ehu" secondAttribute="bottom" constant="51" id="zkM-bS-MPf"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="QPK-zv-Jfu"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Title" id="Fr3-xz-1DV"/>
+                    <tabBarItem key="tabBarItem" title="Team" image="team" id="Nk4-DK-NUM"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sG4-yu-V1g" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="-8" y="77"/>
+        </scene>
+        <!--Home-->
+        <scene sceneID="d8T-fC-3Bp">
+            <objects>
+                <viewController id="oE9-25-MMj" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="PBO-F0-uWv">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="TeP-S3-byF"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Home" image="dashboard-1" id="ezI-nP-Mxg" userLabel="Home"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q0d-Ml-Nke" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1631" y="52"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="daE-Nj-vLF">
+            <objects>
+                <tabBarController id="M2R-UT-CiX" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="9Sr-VZ-AH0">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="oE9-25-MMj" kind="relationship" relationship="viewControllers" id="0aH-de-lCx"/>
+                        <segue destination="Uvb-bF-0KT" kind="relationship" relationship="viewControllers" id="qkQ-wi-TtI"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mCm-Kx-yic" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-748" y="-567"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="dashboard-1" width="16.5" height="16.5"/>
+        <image name="team" width="16.5" height="16.5"/>
+    </resources>
 </document>

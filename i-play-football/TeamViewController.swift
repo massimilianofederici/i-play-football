@@ -13,12 +13,17 @@ import ColorPickerRow
 
 class TeamViewController: FormViewController {
     
+    var team = Team()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         form +++ Section("Team")
             <<< TextRow(){ row in
                 row.title = "Name"
                 row.placeholder = "Team name"
+                row.add(rule: RuleRequired())
+                }.onChange {row in
+                    self.team.name = row.value!
             }
             <<< TextRow(){ row in
                 row.title = "Coach"
@@ -29,11 +34,15 @@ class TeamViewController: FormViewController {
                 row.isCircular = false
                 row.showsPaletteNames = false
             }
-            +++ Section("Players")
-            <<< DateRow(){
-                $0.title = "Date Row"
-                $0.value = Date(timeIntervalSinceReferenceDate: 0)
-        }
+            <<< TextAreaRow(){ row in
+                row.title = "Notes"
+                row.placeholder = "Notes or description"
+            }
+//            +++ Section("Players")
+//            <<< DateRow(){
+//                $0.title = "Date Row"
+//                $0.value = Date(timeIntervalSinceReferenceDate: 0)
+//        }
     }
     
 }

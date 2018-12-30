@@ -13,7 +13,7 @@
         <!--Team View-->
         <scene sceneID="bNw-Gy-s17">
             <objects>
-                <viewController id="Uvb-bF-0KT" userLabel="Team View" sceneMemberID="viewController">
+                <viewController id="Uvb-bF-0KT" userLabel="Team View" customClass="TeamViewController" customModule="i_play_football" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="q5I-EY-qrf">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -38,7 +38,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sG4-yu-V1g" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-8" y="77"/>
+            <point key="canvasLocation" x="-9.375" y="76.056338028169009"/>
         </scene>
         <!--Home-->
         <scene sceneID="d8T-fC-3Bp">
@@ -55,7 +55,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q0d-Ml-Nke" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1631" y="52"/>
+            <point key="canvasLocation" x="-2498" y="117"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="daE-Nj-vLF">

@@ -13,36 +13,52 @@ import ColorPickerRow
 
 class TeamViewController: FormViewController {
     
-    var team = Team()
+    var team: Team?
+    let persistence = TeamPersistence()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.team = persistence.load()
         form +++ Section("Team")
             <<< TextRow(){ row in
                 row.title = "Name"
                 row.placeholder = "Team name"
                 row.add(rule: RuleRequired())
-                }.onChange {row in
-                    self.team.name = row.value!
+                row.value = team?.name
+                }.onChange { row in
+                    self.team = self.team?.withName(teamName: row.value ?? "")
             }
             <<< TextRow(){ row in
                 row.title = "Coach"
                 row.placeholder = "Coach Name"
+                row.value = team?.coach
+                }.onChange { row in
+                    self.team = self.team?.withCoach(coach: row.value ?? "")
             }
             <<< InlineColorPickerRow(){ row in
                 row.title = "Colour"
                 row.isCircular = false
                 row.showsPaletteNames = false
+                row.value = UIColor( team?.colour ?? "")
+                }.onChange { row in
+                    self.team = self.team?.withColour(colour: row.value?.hexString() ?? "")
             }
             <<< TextAreaRow(){ row in
                 row.title = "Notes"
                 row.placeholder = "Notes or description"
-            }
-//            +++ Section("Players")
-//            <<< DateRow(){
-//                $0.title = "Date Row"
-//                $0.value = Date(timeIntervalSinceReferenceDate: 0)
-//        }
+                row.value = team?.notes
+                }.onChange { row in
+                    self.team = self.team?.withNotes(notes: row.value)
+        }
     }
     
+    
+    
+    @IBAction func save() {
+        persistence.save(team: self.team!)
+    }
+    
+    @IBAction func cancel() {
+        print("cancel")
+    }
 }

@@ -33,12 +33,23 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="QPK-zv-Jfu"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Team" image="team" id="Nk4-DK-NUM"/>
+                    <navigationItem key="navigationItem" id="3ou-35-w1P">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="wSN-ZU-HEj">
+                            <connections>
+                                <action selector="cancel" destination="Uvb-bF-0KT" id="g0J-8g-lXS"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="2F3-eV-ypS">
+                            <connections>
+                                <action selector="save" destination="Uvb-bF-0KT" id="Aww-VB-vRR"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sG4-yu-V1g" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-9.375" y="76.056338028169009"/>
+            <point key="canvasLocation" x="988.125" y="76.056338028169009"/>
         </scene>
         <!--Home-->
         <scene sceneID="d8T-fC-3Bp">
@@ -68,12 +79,31 @@
                     </tabBar>
                     <connections>
                         <segue destination="oE9-25-MMj" kind="relationship" relationship="viewControllers" id="0aH-de-lCx"/>
-                        <segue destination="Uvb-bF-0KT" kind="relationship" relationship="viewControllers" id="qkQ-wi-TtI"/>
+                        <segue destination="gnz-LA-5dZ" kind="relationship" relationship="viewControllers" id="qkQ-wi-TtI"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mCm-Kx-yic" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-748" y="-567"/>
+        </scene>
+        <!--Team-->
+        <scene sceneID="SUt-yL-XZY">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gnz-LA-5dZ" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Team" image="team" id="Nk4-DK-NUM"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="6Px-bN-JoN">
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Uvb-bF-0KT" kind="relationship" relationship="rootViewController" id="5JN-pO-la9"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="z5P-Ih-HHp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-9.375" y="76.056338028169009"/>
         </scene>
     </scenes>
     <resources>

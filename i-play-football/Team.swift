@@ -26,29 +26,29 @@ struct Team: Codable {
         return Team(name: "", coach: "", colour: "#27ae60", notes: "")
     }
     
-    func withName(teamName: String) -> Team {
+    func withName(_ teamName: String) -> Team {
         return Team(name: teamName, coach: self.coach, colour: self.colour, notes: self.notes)
     }
     
-    func withCoach(coach: String) -> Team {
+    func withCoach(_ coach: String) -> Team {
         return Team(name: self.name, coach: coach, colour: self.colour, notes: self.notes)
     }
     
-    func withColour(colour: String) -> Team {
+    func withColour(_ colour: String) -> Team {
         return Team(name: self.name, coach: self.coach, colour: colour, notes: self.notes)
     }
     
-    func withNotes(notes: String?) -> Team {
+    func withNotes(_ notes: String?) -> Team {
         return Team(name: self.name, coach: self.coach, colour: self.colour, notes: notes)
     }
 }
 
 class TeamPersistence {
     
-    let preferenceName = "team"
-    let preferences = UserDefaults.standard
-    let encoder = JSONEncoder()
-    let decoder = JSONDecoder()
+    private let preferenceName = "team"
+    private let preferences = UserDefaults.standard
+    private let encoder = JSONEncoder()
+    private let decoder = JSONDecoder()
     
     func save(team: Team) {
         let encoded: Data? = try? encoder.encode(team)

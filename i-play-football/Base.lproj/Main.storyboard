@@ -46,6 +46,9 @@
                         </barButtonItem>
                     </navigationItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="saveButton" destination="2F3-eV-ypS" id="HLg-aT-5Ib"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sG4-yu-V1g" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -13,52 +13,66 @@ import ColorPickerRow
 
 class TeamViewController: FormViewController {
     
-    var team: Team?
     let persistence = TeamPersistence()
+    
+    @IBOutlet weak var saveButton: UIBarButtonItem!
+    
+    lazy var team: Team = { [unowned self] in
+        return self.persistence.load()
+        }()
+    
+    lazy var nameField: TextRow = TextRow() { row in
+        row.title = "Name"
+        row.placeholder = "Team name"
+        row.add(rule: RuleRequired())
+        row.cellUpdate(handleValidation)
+    }
+    
+    lazy var coachField: TextRow = TextRow() { row in
+        row.title = "Coach"
+        row.placeholder = "Coach Name"
+        row.add(rule: RuleRequired())
+        row.cellUpdate(handleValidation)
+    }
+    
+    lazy var colourField: InlineColorPickerRow = InlineColorPickerRow() { row in
+        row.title = "Colour"
+        row.isCircular = false
+        row.showsPaletteNames = false
+    }
+    
+    private func handleValidation(cell: TextCell, row: TextRow) {
+        if !row.isValid {
+            cell.titleLabel?.textColor = .red
+        }
+        saveButton.isEnabled  = form.allRows.flatMap{row in row.validationErrors}.isEmpty
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.team = persistence.load()
         form +++ Section("Team")
-            <<< TextRow(){ row in
-                row.title = "Name"
-                row.placeholder = "Team name"
-                row.add(rule: RuleRequired())
-                row.value = team?.name
-                }.onChange { row in
-                    self.team = self.team?.withName(teamName: row.value ?? "")
-            }
-            <<< TextRow(){ row in
-                row.title = "Coach"
-                row.placeholder = "Coach Name"
-                row.value = team?.coach
-                }.onChange { row in
-                    self.team = self.team?.withCoach(coach: row.value ?? "")
-            }
-            <<< InlineColorPickerRow(){ row in
-                row.title = "Colour"
-                row.isCircular = false
-                row.showsPaletteNames = false
-                row.value = UIColor( team?.colour ?? "")
-                }.onChange { row in
-                    self.team = self.team?.withColour(colour: row.value?.hexString() ?? "")
-            }
-            <<< TextAreaRow(){ row in
-                row.title = "Notes"
-                row.placeholder = "Notes or description"
-                row.value = team?.notes
-                }.onChange { row in
-                    self.team = self.team?.withNotes(notes: row.value)
-        }
+            <<< nameField
+            <<< coachField
+            <<< colourField
+        setInitialValues()
     }
     
-    
-    
     @IBAction func save() {
-        persistence.save(team: self.team!)
+        self.team = self.team.withName(nameField.value ?? "")
+            .withCoach(coachField.value ?? "")
+            .withColour(colourField.value?.hexString() ?? "")
+        persistence.save(team: self.team)
     }
     
     @IBAction func cancel() {
-        print("cancel")
+        self.team = persistence.load()
+        setInitialValues()
+        [nameField, coachField, colourField].forEach { row in row.reload() }
+    }
+    
+    private func setInitialValues() {
+        nameField.value = team.name
+        coachField.value = team.coach
+        colourField.value = UIColor(team.colour)
     }
 }

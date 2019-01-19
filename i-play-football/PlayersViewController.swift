@@ -29,6 +29,13 @@ class PlayersViewController: UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            self.players.remove(at: indexPath.row)
+            self.saveAndReload()
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let identifier = segue.identifier
         let next : UINavigationController = segue.destination as! UINavigationController
@@ -55,25 +62,25 @@ class PlayersViewController: UITableViewController {
     }
     
     private func updatePlayer(_ player: Player) {
-        DispatchQueue.main.async {
-            self.players.removeAll(where: {p in p.id?.uuidString == player.id?.uuidString})
-            self.players.append(player)
-            self.persistence.save(self.players)
-            self.players = self.loadPlayers()
-            self.tableView.reloadData()
-        }
+        self.players.removeAll(where: {p in p.id?.uuidString == player.id?.uuidString})
+        self.players.append(player)
+        self.saveAndReload()
     }
     
     private func savePlayer(_ player: Player) {
+        self.players.append(player)
+        self.saveAndReload()
+    }
+    
+    private func loadPlayers() -> [Player] {
+        return self.persistence.load().sorted();
+    }
+    
+    private func saveAndReload() {
         DispatchQueue.main.async {
-            self.players.append(player)
             self.persistence.save(self.players)
             self.players = self.loadPlayers();
             self.tableView.reloadData()
         }
-    }
-
-    private func loadPlayers() -> [Player] {
-        return self.persistence.load().sorted();
     }
 }

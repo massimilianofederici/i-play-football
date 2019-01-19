@@ -33,13 +33,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="QPK-zv-Jfu"/>
                     </view>
-                    <navigationItem key="navigationItem" id="3ou-35-w1P">
+                    <navigationItem key="navigationItem" title="Team" id="3ou-35-w1P">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="wSN-ZU-HEj">
                             <connections>
                                 <action selector="cancel" destination="Uvb-bF-0KT" id="g0J-8g-lXS"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Save" id="2F3-eV-ypS">
+                        <barButtonItem key="rightBarButtonItem" title="Done" id="2F3-eV-ypS">
                             <connections>
                                 <action selector="save" destination="Uvb-bF-0KT" id="Aww-VB-vRR"/>
                             </connections>
@@ -83,17 +83,106 @@
                     <connections>
                         <segue destination="oE9-25-MMj" kind="relationship" relationship="viewControllers" id="0aH-de-lCx"/>
                         <segue destination="gnz-LA-5dZ" kind="relationship" relationship="viewControllers" id="qkQ-wi-TtI"/>
+                        <segue destination="0sK-C7-kqs" kind="relationship" relationship="viewControllers" id="A5W-41-vTG"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mCm-Kx-yic" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-748" y="-567"/>
         </scene>
+        <!--Players-->
+        <scene sceneID="vcd-aS-kkU">
+            <objects>
+                <tableViewController id="j2O-aG-iFF" customClass="PlayersViewController" customModule="i_play_football" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelectionDuringEditing="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="D7f-fQ-B3r">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="PlainCell" id="YbV-ai-g8V">
+                                <rect key="frame" x="0.0" y="28" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YbV-ai-g8V" id="cUB-z1-YSb">
+                                    <rect key="frame" x="0.0" y="0.0" width="286" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="bcU-l0-V67" kind="show" identifier="playerDetails" id="r1B-nd-i1P"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="j2O-aG-iFF" id="bAO-Tm-4Lp"/>
+                            <outlet property="delegate" destination="j2O-aG-iFF" id="eoa-Q0-wiU"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Players" id="is2-Ne-RBf">
+                        <barButtonItem key="backBarButtonItem" title="Cancel" id="TQs-8b-yWp"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="9HL-kj-liF">
+                            <connections>
+                                <segue destination="bcU-l0-V67" kind="show" identifier="addPlayer" id="Qut-wT-Heg"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3kI-tO-unY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-867" y="256"/>
+        </scene>
+        <!--Player Details View Controller-->
+        <scene sceneID="0gF-Fg-YzU">
+            <objects>
+                <viewController id="AIh-IS-uZN" customClass="PlayerDetailsViewController" customModule="i_play_football" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="IL8-jU-reW">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="SSQ-Lf-sdg"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="aqn-Oq-NWL">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="Rbi-aZ-B3Z">
+                            <connections>
+                                <segue destination="Lfd-T5-zu2" kind="unwind" unwindAction="cancelChangesWithUnwindSegue:" id="THE-Ff-tAM"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Done" id="DFo-cc-SZQ">
+                            <connections>
+                                <segue destination="Lfd-T5-zu2" kind="unwind" unwindAction="saveOrUpdateWithUnwindSegue:" id="re9-wI-Rts"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="saveButton" destination="DFo-cc-SZQ" id="ROF-Le-JTj"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xI8-qB-vM1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Lfd-T5-zu2" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="-1239" y="1105"/>
+        </scene>
+        <!--Players-->
+        <scene sceneID="XPg-bx-Qn0">
+            <objects>
+                <navigationController id="0sK-C7-kqs" userLabel="Players" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Players" image="team" id="uPn-No-P5d"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="kkN-VV-LDA">
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="j2O-aG-iFF" kind="relationship" relationship="rootViewController" id="hV9-53-v6m"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="adC-Ki-1oP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1669" y="266"/>
+        </scene>
         <!--Team-->
         <scene sceneID="SUt-yL-XZY">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="gnz-LA-5dZ" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Team" image="team" id="Nk4-DK-NUM"/>
+                    <tabBarItem key="tabBarItem" title="Team" image="coach" id="Nk4-DK-NUM"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="6Px-bN-JoN">
                         <rect key="frame" x="0.0" y="20" width="320" height="44"/>
@@ -108,9 +197,31 @@
             </objects>
             <point key="canvasLocation" x="-9.375" y="76.056338028169009"/>
         </scene>
+        <!--Player Details Wrapper-->
+        <scene sceneID="Uvv-Gs-EKx">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="bcU-l0-V67" userLabel="Player Details Wrapper" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="hCP-lT-UAk">
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="AIh-IS-uZN" kind="relationship" relationship="rootViewController" id="QYg-oy-4MM"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bca-aJ-14m" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="168.75" y="939.08450704225356"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="coach" width="16.5" height="16.5"/>
         <image name="dashboard-1" width="16.5" height="16.5"/>
         <image name="team" width="16.5" height="16.5"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="r1B-nd-i1P"/>
+    </inferredMetricsTieBreakers>
 </document>

@@ -50,8 +50,7 @@ class TeamViewController: FormViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        form +++ Section("Team")
-            <<< nameField
+        form +++ nameField
             <<< coachField
             <<< colourField
         setInitialValues()

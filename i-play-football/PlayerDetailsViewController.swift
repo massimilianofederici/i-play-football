@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import Eureka
+import ImageRow
 
 class PlayerDetailsViewController: FormViewController {
     
@@ -43,12 +44,31 @@ class PlayerDetailsViewController: FormViewController {
     lazy var dateOfBirthField: DateRow = DateRow() { row in
         row.title = "Date of Birth"
         row.value = player?.dateOfBirth
+        row.onChange { v in
+            self.player = self.player?.withDateOfBirth(v.value)
+        }
     }
     
     lazy var preferredPositionField: PushRow<String> = PushRow() { row in
         row.title = "Preferred Position"
         row.options = PlayerPosition.allCases.map{o in o.rawValue}
         row.value = player?.preferredPosition?.rawValue
+        row.onChange { v in
+            self.player = self.player?.withPreferredPosition(PlayerPosition.fromDescription(term: v.value))
+        }
+    }
+    
+    lazy var picture: ImageRow = ImageRow() { row in
+        row.title = "Add a photo"
+        row.sourceTypes = [.PhotoLibrary, .SavedPhotosAlbum]
+        row.clearAction = .yes(style: UIAlertAction.Style.destructive)
+        if let data = player?.profilePicture {
+            row.value = UIImage(data: data)
+        }
+        row.onChange { v in
+            let imageData:Data? = v.value?.jpegData(compressionQuality: 1.0)
+            self.player = self.player?.withProfilePicture(imageData)
+        }
     }
     
     override func viewDidLoad() {
@@ -58,6 +78,7 @@ class PlayerDetailsViewController: FormViewController {
             <<< lastNameField
             <<< dateOfBirthField
             <<< preferredPositionField
+            <<< picture
         form.validate()
     }
     

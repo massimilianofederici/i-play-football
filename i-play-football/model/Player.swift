@@ -18,25 +18,32 @@ struct Player: Codable, Comparable {
     let lastName: String
     let dateOfBirth: Date?
     let preferredPosition: PlayerPosition?
+    let profilePicture: Data?
     var id: UUID?
     
-    init(firstName: String, lastName: String, dateOfBirth: Date?, preferredPosition: PlayerPosition?, id: UUID?) {
+    init(firstName: String, lastName: String,
+         dateOfBirth: Date?,
+         preferredPosition: PlayerPosition?,
+         profilePicture: Data?,
+         id: UUID?) {
         self.firstName = firstName
         self.lastName = lastName
         self.dateOfBirth = dateOfBirth
         self.preferredPosition = preferredPosition
+        self.profilePicture = profilePicture
         self.id = id
     }
     
     static func aPlayer() -> Player {
-        return Player(firstName: "", lastName: "", dateOfBirth: nil, preferredPosition: nil, id: nil)
+        return Player(firstName: "", lastName: "", dateOfBirth: nil, preferredPosition: nil, profilePicture: nil, id: nil)
     }
     
-    private init(transient: Player) {
+    init(transient: Player) {
         self.firstName = transient.firstName
         self.lastName = transient.lastName
         self.dateOfBirth = transient.dateOfBirth
         self.preferredPosition = transient.preferredPosition
+        self.profilePicture = transient.profilePicture
         self.id = UUID();
     }
     
@@ -49,23 +56,23 @@ struct Player: Codable, Comparable {
     }
     
     func withFirstName(_ firstName: String) -> Player {
-        return Player(firstName: firstName, lastName: lastName, dateOfBirth: dateOfBirth, preferredPosition: preferredPosition, id: self.id)
+        return Player(firstName: firstName, lastName: lastName, dateOfBirth: dateOfBirth, preferredPosition: preferredPosition, profilePicture: self.profilePicture, id: self.id)
     }
     
     func withLastName(_ lastName: String) -> Player {
-        return Player(firstName: firstName, lastName: lastName, dateOfBirth: dateOfBirth, preferredPosition: preferredPosition, id: self.id)
+        return Player(firstName: firstName, lastName: lastName, dateOfBirth: dateOfBirth, preferredPosition: preferredPosition, profilePicture: self.profilePicture, id: self.id)
     }
     
-    func withDateOfBirth(_ dateOfBirth: Date) -> Player {
-        return Player(firstName: firstName, lastName: lastName, dateOfBirth: dateOfBirth, preferredPosition: preferredPosition, id: self.id)
+    func withDateOfBirth(_ dateOfBirth: Date?) -> Player {
+        return Player(firstName: firstName, lastName: lastName, dateOfBirth: dateOfBirth, preferredPosition: preferredPosition, profilePicture: self.profilePicture, id: self.id)
     }
     
-    func withPreferredPosition(_ preferredPosition: PlayerPosition) -> Player {
-        return Player(firstName: firstName, lastName: lastName, dateOfBirth: dateOfBirth, preferredPosition: preferredPosition, id: self.id)
+    func withPreferredPosition(_ preferredPosition: PlayerPosition?) -> Player {
+        return Player(firstName: firstName, lastName: lastName, dateOfBirth: dateOfBirth, preferredPosition: preferredPosition, profilePicture: self.profilePicture, id: self.id)
     }
     
-    func withId() -> Player {
-        return self.id != nil ? self : Player(transient: self)
+    func withProfilePicture(_ profilePicture: Data?) -> Player {
+        return Player(firstName: firstName, lastName: lastName, dateOfBirth: dateOfBirth, preferredPosition: preferredPosition, profilePicture: profilePicture, id: self.id)
     }
 }
 
@@ -76,6 +83,10 @@ enum PlayerPosition: String, CaseIterable, Codable {
     case rightWing = "Right Wing"
     case midfielder = "Midfielder"
     case striker = "Striker"
+    
+    static func fromDescription(term: String?) -> PlayerPosition? {
+        return PlayerPosition.allCases.first(where: { p in p.rawValue == term})
+    }
 }
 
 class PlayersPersistence {
@@ -86,7 +97,9 @@ class PlayersPersistence {
     private let decoder = JSONDecoder()
     
     func save(_ players: [Player]) {
-        let encoded: Data? = try? encoder.encode(players.map{ p in p.withId()})
+        let encoded: Data? = try? encoder.encode(players.map{ p in
+            p.isTransient() ? Player(transient: p) : p
+        })
         encoded.map{data in
             preferences.setValue(data, forKey: preferenceName)
             preferences.synchronize()
@@ -94,20 +107,6 @@ class PlayersPersistence {
     }
     
     func load() -> [Player] {
-        //        var players: [Player] = []
-        //        let calendar = Calendar.current
-        //        let dateComponents = DateComponents(calendar: calendar,
-        //                                            year: 2009,
-        //                                            month: 12,
-        //                                            day: 13)
-        //        players.append(Player(firstName: "Manny", lastName: "Federici", dateOfBirth: dateComponents.date!, preferredPosition: PlayerPosition.striker))
-        //        players.append(Player(firstName: "Alfie", lastName: "PP", dateOfBirth: dateComponents.date!, preferredPosition: PlayerPosition.midfielder))
-        //        let encoded: Data? = try? encoder.encode(players)
-        //        encoded.map{data in
-        //            preferences.setValue(data, forKey: preferenceName)
-        //            preferences.synchronize()
-        //        }
-        //        return players
         return preferences.data(forKey: preferenceName).flatMap{ data in
             try? decoder.decode([Player].self, from: data)
             } ?? []

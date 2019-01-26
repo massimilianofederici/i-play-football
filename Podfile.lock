@@ -3,16 +3,20 @@ PODS:
     - Eureka (>= 3.0.0)
     - UIColor_Hex_Swift (>= 3.0.0)
   - Eureka (4.3.1)
+  - ImageRow (3.2.0):
+    - Eureka (~> 4.3)
   - UIColor_Hex_Swift (4.2.0)
 
 DEPENDENCIES:
   - ColorPickerRow (from `https://github.com/EurekaCommunity/ColorPickerRow`)
   - Eureka (~> 4.3.1)
+  - ImageRow (~> 3.0)
   - UIColor_Hex_Swift
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Eureka
+    - ImageRow
     - UIColor_Hex_Swift
 
 EXTERNAL SOURCES:
@@ -27,8 +31,9 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   ColorPickerRow: 87dd091c54fff65cf554f79ca1556312ee66282f
   Eureka: 28ea296f06710f6745266b71f17862048941a32d
+  ImageRow: 03681b3ef8034b5a649440325f5d5ba7b22c1b0a
   UIColor_Hex_Swift: bc07fc197421ee896b9ed6dcfa2054b7fbf75145
 
-PODFILE CHECKSUM: 41637bfeb6af316cbed01ce492f1c60ef7811d56
+PODFILE CHECKSUM: 7c0243b0167f4cb68a2fdbec6aeb6165efb71c60
 
 COCOAPODS: 1.5.3

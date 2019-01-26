@@ -41,5 +41,12 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+    <key>UIRequiredDeviceCapabilities</key>
+    <dict>
+        <key>still-camera</key>
+        <true/>
+    </dict>
+    <key>NSCameraUsageDescription</key>
+    <string>Camera Access Warning</string>
 </dict>
 </plist>

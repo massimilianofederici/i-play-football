@@ -11,6 +11,7 @@ target 'i-play-football' do
   platform :ios, '12.1' 
   use_frameworks! 
   pod 'Eureka', '~> 4.3.1'
+  pod 'ImageRow', '~> 3.0'
   pod 'ColorPickerRow', :git => 'https://github.com/EurekaCommunity/ColorPickerRow'
   pod 'UIColor_Hex_Swift'
 

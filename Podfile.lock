@@ -5,18 +5,21 @@ PODS:
   - Eureka (4.3.1)
   - ImageRow (3.2.0):
     - Eureka (~> 4.3)
+  - JTAppleCalendar (7.1.6)
   - UIColor_Hex_Swift (4.2.0)
 
 DEPENDENCIES:
   - ColorPickerRow (from `https://github.com/EurekaCommunity/ColorPickerRow`)
   - Eureka (~> 4.3.1)
   - ImageRow (~> 3.0)
+  - JTAppleCalendar (~> 7.0)
   - UIColor_Hex_Swift
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Eureka
     - ImageRow
+    - JTAppleCalendar
     - UIColor_Hex_Swift
 
 EXTERNAL SOURCES:
@@ -32,8 +35,9 @@ SPEC CHECKSUMS:
   ColorPickerRow: 87dd091c54fff65cf554f79ca1556312ee66282f
   Eureka: 28ea296f06710f6745266b71f17862048941a32d
   ImageRow: 03681b3ef8034b5a649440325f5d5ba7b22c1b0a
+  JTAppleCalendar: abb30678f42a4ef8a340a932b1dcb8c85a33dac2
   UIColor_Hex_Swift: bc07fc197421ee896b9ed6dcfa2054b7fbf75145
 
-PODFILE CHECKSUM: 7c0243b0167f4cb68a2fdbec6aeb6165efb71c60
+PODFILE CHECKSUM: f6019d92d5bff0f98663d65bd10cb7263ad9fd34
 
 COCOAPODS: 1.5.3

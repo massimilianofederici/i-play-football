@@ -1,11 +1,3 @@
-//
-//  PlayerDetailsViewController.swift
-//  i-play-football
-//
-//  Created by Massimiliano Federici on 12/01/2019.
-//  Copyright © 2019 Massimiliano Federici. All rights reserved.
-//
-
 import Foundation
 import UIKit
 import Eureka
@@ -25,7 +17,7 @@ class PlayerDetailsViewController: FormViewController {
         row.validationOptions = .validatesOnChange
         row.cellUpdate(handleValidation)
         row.onChange {v in
-            self.player = self.player?.withFirstName(v.value ?? "")
+            self.player?.firstName = v.value ?? ""
         }
     }
     
@@ -37,7 +29,17 @@ class PlayerDetailsViewController: FormViewController {
         row.validationOptions = .validatesOnChange
         row.cellUpdate(handleValidation)
         row.onChange {v in
-            self.player = self.player?.withLastName(v.value ?? "")
+            self.player?.lastName = v.value ?? ""
+        }
+    }
+    
+    lazy var notesField: TextAreaRow = TextAreaRow() { row in
+        row.title = "Notes"
+        row.placeholder = "Notes"
+        row.add(rule: RuleRequired())
+        row.value = player?.notes
+        row.onChange {v in
+            self.player?.notes = v.value
         }
     }
     
@@ -45,7 +47,7 @@ class PlayerDetailsViewController: FormViewController {
         row.title = "Date of Birth"
         row.value = player?.dateOfBirth
         row.onChange { v in
-            self.player = self.player?.withDateOfBirth(v.value)
+            self.player?.dateOfBirth = v.value
         }
     }
     
@@ -54,7 +56,7 @@ class PlayerDetailsViewController: FormViewController {
         row.options = PlayerPosition.allCases.map{o in o.rawValue}
         row.value = player?.preferredPosition?.rawValue
         row.onChange { v in
-            self.player = self.player?.withPreferredPosition(PlayerPosition.fromDescription(term: v.value))
+            self.player?.preferredPosition = PlayerPosition.fromDescription(term: v.value)
         }
     }
     
@@ -67,7 +69,7 @@ class PlayerDetailsViewController: FormViewController {
         }
         row.onChange { v in
             let imageData:Data? = v.value?.jpegData(compressionQuality: 1.0)
-            self.player = self.player?.withProfilePicture(imageData)
+            self.player?.profilePicture = imageData
         }
     }
     
@@ -78,6 +80,7 @@ class PlayerDetailsViewController: FormViewController {
             <<< lastNameField
             <<< dateOfBirthField
             <<< preferredPositionField
+            <<< notesField
             <<< picture
         form.validate()
     }

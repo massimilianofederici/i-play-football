@@ -1,11 +1,3 @@
-//
-//  PlayersController.swift
-//  i-play-football
-//
-//  Created by Massimiliano Federici on 12/01/2019.
-//  Copyright © 2019 Massimiliano Federici. All rights reserved.
-//
-
 import Foundation
 import UIKit
 
@@ -42,7 +34,7 @@ class PlayersViewController: UITableViewController {
         let detailsController:PlayerDetailsViewController = next.topViewController as! PlayerDetailsViewController
         switch identifier {
         case "addPlayer":
-            detailsController.player = Player.aPlayer()
+            detailsController.player = Player(firstName: "", lastName: "")
         case "playerDetails":
             let selection: Int! = self.tableView.indexPathForSelectedRow?.row
             detailsController.player = players[selection]
@@ -52,18 +44,18 @@ class PlayersViewController: UITableViewController {
     }
     
     @IBAction func cancelChanges(unwindSegue: UIStoryboardSegue) {
+        self.players = self.loadPlayers();
+        self.tableView.reloadData()
     }
     
     @IBAction func saveOrUpdate(unwindSegue: UIStoryboardSegue) {
         let detailsController:PlayerDetailsViewController = unwindSegue.source as! PlayerDetailsViewController
         detailsController.player.map{ p in
-            p.isTransient() ? savePlayer(p) : updatePlayer(p)
+            p.id == nil ? savePlayer(p) : updatePlayer(p)
         }
     }
     
     private func updatePlayer(_ player: Player) {
-        self.players.removeAll(where: {p in p.id?.uuidString == player.id?.uuidString})
-        self.players.append(player)
         self.saveAndReload()
     }
     

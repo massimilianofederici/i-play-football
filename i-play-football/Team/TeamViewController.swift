@@ -1,11 +1,3 @@
-//
-//  TeamViewController.swift
-//  i-play-football
-//
-//  Created by Massimiliano Federici on 30/12/2018.
-//  Copyright © 2018 Massimiliano Federici. All rights reserved.
-//
-
 import Foundation
 import UIKit
 import Eureka
@@ -57,9 +49,9 @@ class TeamViewController: FormViewController {
     }
     
     @IBAction func save() {
-        self.team = self.team.withName(nameField.value ?? "")
-            .withCoach(coachField.value ?? "")
-            .withColour(colourField.value?.hexString() ?? "")
+        self.team.name = nameField.value!
+        self.team.coach = coachField.value
+        self.team.colour = colourField.value?.hexString()
         persistence.save(team: self.team)
     }
     
@@ -72,6 +64,8 @@ class TeamViewController: FormViewController {
     private func setInitialValues() {
         nameField.value = team.name
         coachField.value = team.coach
-        colourField.value = UIColor(team.colour)
+        team.colour.map{UIColor($0)}.map{
+            colourField.value = $0
+        }
     }
 }

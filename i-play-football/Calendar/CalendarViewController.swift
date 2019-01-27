@@ -13,17 +13,17 @@ class CalendarViewController: UIViewController {
     private func loadSchedules() -> Dictionary<Date, [Schedule]> {
         var data:[Schedule] = []
         let today: Date = Calendar.current.startOfDay(for: Date())
-        data.append(Schedule(fromStartDate: today))
+        data.append(Schedule.trainingSession(dayOfEvent: today))
         let date = Calendar.current.date(byAdding: .day, value: 5, to: today)
-        data.append(Schedule(fromStartDate: date!))
+        data.append(Schedule.match(dayOfEvent: date!))
         return data.group{$0.dayOfTheEvent}
     }
     
     let formatter = DateFormatter()
     let dateFormatterString = "yyyy MM dd"
     let numOfRowsInCalendar = 6
-    let calendarCellIdentifier = "CalendarCell"
-    let scheduleCellIdentifier = "detail"
+    let calendarCellIdentifier = "calendarCell"
+    let scheduleCellIdentifier = "scheduleDetail"
     
     var iii: Date?
     
@@ -65,21 +65,14 @@ class CalendarViewController: UIViewController {
     }
     
     func setupViewNibs() {
-        let myNib = UINib(nibName: calendarCellIdentifier, bundle: Bundle.main)
-        calendarView.register(myNib, forCellWithReuseIdentifier: calendarCellIdentifier)
-        
-        
-        let myNib2 = UINib(nibName: "ScheduleTableViewCell", bundle: Bundle.main)
-        tableView.register(myNib2, forCellReuseIdentifier: scheduleCellIdentifier)
+        let calendarCellView = UINib(nibName: "CalendarCell", bundle: Bundle.main)
+        calendarView.register(calendarCellView, forCellWithReuseIdentifier: calendarCellIdentifier)
+        let tableCellView = UINib(nibName: "ScheduleTableViewCell", bundle: Bundle.main)
+        tableView.register(tableCellView, forCellReuseIdentifier: scheduleCellIdentifier)
     }
     
     func setupViewsOfCalendar(from visibleDates: DateSegmentInfo) {
-        guard let startDate = visibleDates.monthDates.first?.date else {
-            return
-        }
-        
-        let year = Calendar.current.component(.year, from: startDate)
-        navigationItem.title = "\(year) \(currentMonthSymbol)"
+        visibleDates.monthDates.first.map{Calendar.current.component(.year, from: $0.date)}.map { navigationItem.title = "\($0) \(currentMonthSymbol)"}
     }
 }
 
@@ -103,11 +96,9 @@ extension CalendarViewController {
     
     func showToday(animate:Bool) {
         calendarView.scrollToDate(Date(), triggerScrollToDateDelegate: true, animateScroll: animate, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
-            //            self.getSchedule()
             self.calendarView.visibleDates {[unowned self] (visibleDates: DateSegmentInfo) in
                 self.setupViewsOfCalendar(from: visibleDates)
             }
-            
             self.adjustCalendarViewHeight()
             self.calendarView.selectDates([Date()])
         }

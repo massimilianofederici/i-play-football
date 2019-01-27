@@ -330,7 +330,7 @@
                                 <rect key="frame" x="0.0" y="416" width="320" height="108"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="detail" rowHeight="50" id="nFX-Ec-yD6" customClass="ScheduleTableViewCell" customModule="i_play_football" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="scheduleDetail" rowHeight="50" id="nFX-Ec-yD6" customClass="ScheduleTableViewCell" customModule="i_play_football" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nFX-Ec-yD6" id="BT4-99-px1">

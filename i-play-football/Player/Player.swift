@@ -20,7 +20,7 @@ class Player: Codable {
     }
 }
 
-extension Player: Comparable {
+extension Player: Comparable, Equatable {
     
     static func < (lhs: Player, rhs: Player) -> Bool {
         return lhs.name() < rhs.name()

@@ -21,7 +21,7 @@ class CalendarViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViewNibs()
-        showToday()
+        select(date: Date())
     }
     
     private func setupViewNibs() {
@@ -42,15 +42,14 @@ class CalendarViewController: UIViewController {
         }
     }
     
-    private func showToday() {
-        let today = Date()
-        calendarView.scrollToDate(today, triggerScrollToDateDelegate: true, animateScroll: false, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
+    private func select(date: Date) {
+        calendarView.scrollToDate(date, triggerScrollToDateDelegate: true, animateScroll: false, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
             self.getSchedules()
             self.calendarView.visibleDates {[unowned self] (visibleDates: DateSegmentInfo) in
                 self.updateViewTitle(from: visibleDates)
             }
             self.adjustCalendarViewHeight()
-            self.calendarView.selectDates([today])
+            self.calendarView.selectDates([date])
         }
     }
     
@@ -62,22 +61,59 @@ class CalendarViewController: UIViewController {
     }
 }
 
-extension CalendarViewController {
-    func select(onVisibleDates visibleDates: DateSegmentInfo) {
-        #warning("ugly")
-        guard let firstDateInMonth = visibleDates.monthDates.first?.date else
-        { return }
-        
-        if firstDateInMonth.isThisMonth() {
-            calendarView.selectDates([Date()])
-        } else {
-            calendarView.selectDates([firstDateInMonth])
-        }
+#warning("move to separate class")
+extension CalendarViewController: JTAppleCalendarViewDataSource {
+    
+    func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters {
+        formatter.dateFormat = Constants.calendarDateFormat
+        formatter.timeZone = Calendar.current.timeZone
+        formatter.locale = Calendar.current.locale
+        let startDate = formatter.date(from: "2017 01 01")!
+        let endDate = formatter.date(from: "2030 02 01")!
+        let parameters = ConfigurationParameters(startDate: startDate,
+                                                 endDate: endDate,
+                                                 numberOfRows: Constants.numberOfRowsInCalendar,
+                                                 calendar: Calendar.current,
+                                                 generateInDates: .forAllMonths,
+                                                 generateOutDates: .tillEndOfGrid,
+                                                 firstDayOfWeek: .sunday,
+                                                 hasStrictBoundaries: true)
+        return parameters
     }
 }
 
-extension CalendarViewController {
-    func configureCell(view: JTAppleCell?, cellState: CellState) {
+#warning("move to separate file")
+extension CalendarViewController: JTAppleCalendarViewDelegate {
+    
+    func calendar(_ calendar: JTAppleCalendarView, willDisplay cell: JTAppleCell, forItemAt date: Date, cellState: CellState, indexPath: IndexPath) {
+        let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: Constants.calendarCellIdentifier,
+                                                       for: indexPath) as! CalendarCell
+        configureCell(view: cell, cellState: cellState)
+    }
+    
+    func calendar(_ calendar: JTAppleCalendarView, cellForItemAt date: Date, cellState: CellState, indexPath: IndexPath) -> JTAppleCell {
+        let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: Constants.calendarCellIdentifier,
+                                                       for: indexPath) as! CalendarCell
+        configureCell(view: cell, cellState: cellState)
+        return cell
+    }
+    
+    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
+        let initialSelection = visibleDates.monthDates.first.map {$0.date.isThisMonth() ? Date() : $0.date}
+        select(date: initialSelection!)
+    }
+    
+    func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
+        configureCell(view: cell, cellState: cellState)
+        tableView.reloadData()
+        tableView.contentOffset = CGPoint()
+    }
+    
+    func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
+        configureCell(view: cell, cellState: cellState)
+    }
+    
+    private func configureCell(view: JTAppleCell?, cellState: CellState) {
         guard let myCustomCell = view as? CalendarCell else { return }
         
         // hide if outiside current month
@@ -114,68 +150,8 @@ extension CalendarViewController {
     }
 }
 
-extension CalendarViewController: JTAppleCalendarViewDataSource {
-    func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters {
-        formatter.dateFormat = Constants.calendarDateFormat
-        formatter.timeZone = Calendar.current.timeZone
-        formatter.locale = Calendar.current.locale
-        
-        let startDate = formatter.date(from: "2017 01 01")!
-        let endDate = formatter.date(from: "2030 02 01")!
-        
-        let parameters = ConfigurationParameters(startDate: startDate,
-                                                 endDate: endDate,
-                                                 numberOfRows: Constants.numberOfRowsInCalendar,
-                                                 calendar: Calendar.current,
-                                                 generateInDates: .forAllMonths,
-                                                 generateOutDates: .tillEndOfGrid,
-                                                 firstDayOfWeek: .sunday,
-                                                 hasStrictBoundaries: true)
-        return parameters
-    }
-}
-
-extension CalendarViewController: JTAppleCalendarViewDelegate {
-    func calendar(_ calendar: JTAppleCalendarView, willDisplay cell: JTAppleCell, forItemAt date: Date, cellState: CellState, indexPath: IndexPath) {
-        #warning("Extract to commond method")
-        let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: Constants.calendarCellIdentifier,
-                                                       for: indexPath) as! CalendarCell
-        configureCell(view: cell, cellState: cellState)
-    }
-    
-    func calendar(_ calendar: JTAppleCalendarView, cellForItemAt date: Date, cellState: CellState, indexPath: IndexPath) -> JTAppleCell {
-        let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: Constants.calendarCellIdentifier,
-                                                       for: indexPath) as! CalendarCell
-        configureCell(view: cell, cellState: cellState)
-        return cell
-    }
-    
-    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
-        getSchedules()
-        updateViewTitle(from: visibleDates)
-        select(onVisibleDates: visibleDates)
-        
-        view.layoutIfNeeded()
-        
-        adjustCalendarViewHeight()
-        
-        UIView.animate(withDuration: 0.5) { [unowned self] in
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
-        configureCell(view: cell, cellState: cellState)
-        tableView.reloadData()
-        tableView.contentOffset = CGPoint()
-    }
-    
-    func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
-        configureCell(view: cell, cellState: cellState)
-    }
-}
-
 extension CalendarViewController : UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.scheduleCellIdentifier, for: indexPath) as! ScheduleTableViewCell
         cell.selectionStyle = .none

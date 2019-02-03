@@ -1,31 +1,26 @@
 import JTAppleCalendar
 
+#warning("fix indicator for scheduled events")
 class CalendarViewController: UIViewController {
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var separatorViewTopConstraint: NSLayoutConstraint!
     
-    lazy var schedulesGroupByDate: Dictionary<Date, [Schedule]> = { [unowned self] in
-        return loadSchedules()
-        }()
-    
-    private func loadSchedules() -> Dictionary<Date, [Schedule]> {
-        var data:[Schedule] = []
-        let today: Date = Calendar.current.startOfDay(for: Date())
-        data.append(Schedule.trainingSession(dayOfEvent: today))
-        let date = Calendar.current.date(byAdding: .day, value: 5, to: today)
-        data.append(Schedule.match(dayOfEvent: date!))
-        return data.group{$0.dayOfTheEvent}
+    struct Constants {
+        static let calendarCellIdentifier = "calendarCell"
+        static let scheduleCellIdentifier = "scheduleDetail"
+        static let calendarDateFormat = "yyy MM dd"
+        static let numberOfRowsInCalendar = 6
     }
     
-    let formatter = DateFormatter()
-    let dateFormatterString = "yyyy MM dd"
-    let numOfRowsInCalendar = 6
-    let calendarCellIdentifier = "calendarCell"
-    let scheduleCellIdentifier = "scheduleDetail"
+    var schedulesGroupByDate: Dictionary<Date, [Schedule]> = Dictionary()
     
-    var iii: Date?
+    let formatter = DateFormatter()
+    #warning("inject service")
+    let persistence: SchedulePersistence = SchedulePersistence()
+    #warning("what is it??")
+//    var iii: Date?
     
     var numOfRowIsSix: Bool {
         get {
@@ -48,6 +43,7 @@ class CalendarViewController: UIViewController {
         setupViewNibs()
         showToday(animate: false)
         
+        #warning("do we need this?")
         let gesturer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(gesture:)))
         calendarView.addGestureRecognizer(gesturer)
     }
@@ -65,10 +61,11 @@ class CalendarViewController: UIViewController {
     }
     
     func setupViewNibs() {
+        #warning("reference by constant")
         let calendarCellView = UINib(nibName: "CalendarCell", bundle: Bundle.main)
-        calendarView.register(calendarCellView, forCellWithReuseIdentifier: calendarCellIdentifier)
+        calendarView.register(calendarCellView, forCellWithReuseIdentifier: Constants.calendarCellIdentifier)
         let tableCellView = UINib(nibName: "ScheduleTableViewCell", bundle: Bundle.main)
-        tableView.register(tableCellView, forCellReuseIdentifier: scheduleCellIdentifier)
+        tableView.register(tableCellView, forCellReuseIdentifier: Constants.scheduleCellIdentifier)
     }
     
     func setupViewsOfCalendar(from visibleDates: DateSegmentInfo) {
@@ -78,6 +75,7 @@ class CalendarViewController: UIViewController {
 
 extension CalendarViewController {
     func select(onVisibleDates visibleDates: DateSegmentInfo) {
+        #warning("ugly")
         guard let firstDateInMonth = visibleDates.monthDates.first?.date else
         { return }
         
@@ -90,12 +88,15 @@ extension CalendarViewController {
 }
 
 extension CalendarViewController {
+    
+    #warning("do we this this overloaded version?")
     func showTodayWithAnimate() {
         showToday(animate: true)
     }
     
     func showToday(animate:Bool) {
         calendarView.scrollToDate(Date(), triggerScrollToDateDelegate: true, animateScroll: animate, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
+            self.getSchedules()
             self.calendarView.visibleDates {[unowned self] (visibleDates: DateSegmentInfo) in
                 self.setupViewsOfCalendar(from: visibleDates)
             }
@@ -111,7 +112,7 @@ extension CalendarViewController {
     }
     
     func adjustCalendarViewHeight(higher: Bool) {
-        separatorViewTopConstraint.constant = higher ? 0 : -calendarView.frame.height / CGFloat(numOfRowsInCalendar)
+        separatorViewTopConstraint.constant = higher ? 0 : -calendarView.frame.height / CGFloat(Constants.numberOfRowsInCalendar)
     }
 }
 
@@ -133,7 +134,7 @@ extension CalendarViewController {
         handleCellSelection(view: myCustomCell, cellState: cellState)
         if schedulesGroupByDate[cellState.date]?.count ?? 0 > 0 {
             myCustomCell.eventView.isHidden = false
-        } else{
+        } else {
             myCustomCell.eventView.isHidden = true
         }
     }
@@ -166,7 +167,7 @@ extension CalendarViewController {
 
 extension CalendarViewController: JTAppleCalendarViewDataSource {
     func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters {
-        formatter.dateFormat = dateFormatterString
+        formatter.dateFormat = Constants.calendarDateFormat
         formatter.timeZone = Calendar.current.timeZone
         formatter.locale = Calendar.current.locale
         
@@ -175,36 +176,49 @@ extension CalendarViewController: JTAppleCalendarViewDataSource {
         
         let parameters = ConfigurationParameters(startDate: startDate,
                                                  endDate: endDate,
-                                                 numberOfRows: numOfRowsInCalendar,
+                                                 numberOfRows: Constants.numberOfRowsInCalendar,
                                                  calendar: Calendar.current,
                                                  generateInDates: .forAllMonths,
                                                  generateOutDates: .tillEndOfGrid,
-                                                 firstDayOfWeek: .sunday,
+                                                 firstDayOfWeek: .monday,
                                                  hasStrictBoundaries: true)
         return parameters
     }
 }
 
+extension CalendarViewController {
+    
+    func getSchedules() {
+        if let startDate = calendarView.visibleDates().monthDates.first?.date  {
+            let endDate = Calendar.current.date(byAdding: .month, value: 1, to: startDate)
+            let data = persistence.load(from: startDate, to: endDate!)
+            schedulesGroupByDate = data.group{$0.dayOfTheEvent}
+        }
+    }
+}
+
 extension CalendarViewController: JTAppleCalendarViewDelegate {
     func calendar(_ calendar: JTAppleCalendarView, willDisplay cell: JTAppleCell, forItemAt date: Date, cellState: CellState, indexPath: IndexPath) {
-        let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: calendarCellIdentifier, for: indexPath) as! CalendarCell
+        #warning("Extract to commond method")
+        let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: Constants.calendarCellIdentifier,
+                                                       for: indexPath) as! CalendarCell
         configureCell(view: cell, cellState: cellState)
     }
     
     func calendar(_ calendar: JTAppleCalendarView, cellForItemAt date: Date, cellState: CellState, indexPath: IndexPath) -> JTAppleCell {
-        let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: calendarCellIdentifier, for: indexPath) as! CalendarCell
+        let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: Constants.calendarCellIdentifier,
+                                                       for: indexPath) as! CalendarCell
         configureCell(view: cell, cellState: cellState)
         return cell
     }
     
     func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
+        getSchedules()
         setupViewsOfCalendar(from: visibleDates)
-        if visibleDates.monthDates.first?.date == iii {
-            return
-        }
-        
-        iii = visibleDates.monthDates.first?.date
-        
+//        if visibleDates.monthDates.first?.date == iii {
+//            return
+//        }
+//        iii = visibleDates.monthDates.first?.date
         select(onVisibleDates: visibleDates)
         
         view.layoutIfNeeded()
@@ -229,7 +243,7 @@ extension CalendarViewController: JTAppleCalendarViewDelegate {
 
 extension CalendarViewController : UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: scheduleCellIdentifier, for: indexPath) as! ScheduleTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.scheduleCellIdentifier, for: indexPath) as! ScheduleTableViewCell
         cell.selectionStyle = .none
         calendarView.selectedDates.first.map{d in
             cell.schedule = schedulesGroupByDate[d]?[indexPath.row]

@@ -61,3 +61,15 @@ extension Schedule : Equatable, Comparable {
         return lhs.startTime < rhs.startTime
     }
 }
+
+class SchedulePersistence {
+    
+    func load(from: Date, to: Date) -> [Schedule] {
+        var data:[Schedule] = []
+        let today: Date = Calendar.current.startOfDay(for: from)
+        data.append(Schedule.trainingSession(dayOfEvent: today))
+        let date = Calendar.current.date(byAdding: .day, value: 5, to: today)
+        data.append(Schedule.match(dayOfEvent: date!))
+        return data
+    }
+}

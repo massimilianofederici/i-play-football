@@ -64,7 +64,7 @@ extension Schedule : Equatable, Comparable {
 
 class SchedulePersistence {
     
-    func load(from: Date, to: Date) -> [Schedule] {
+    private func load(from: Date, to: Date) -> [Schedule] {
         var data:[Schedule] = []
         let today: Date = Calendar.current.startOfDay(for: from)
         data.append(Schedule.trainingSession(dayOfEvent: today))
@@ -72,4 +72,11 @@ class SchedulePersistence {
         data.append(Schedule.match(dayOfEvent: date!))
         return data
     }
+    
+    func load(from: Date) -> Dictionary<Date, [Schedule]> {
+        let to:Date = Calendar.current.date(byAdding: .month, value: 1, to: from)!
+        let data = load(from: from, to: to)
+        return data.group{$0.dayOfTheEvent}
+    }
+    
 }

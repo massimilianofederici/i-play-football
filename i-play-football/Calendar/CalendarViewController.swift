@@ -15,18 +15,8 @@ class CalendarViewController: UIViewController {
     }
     
     var schedulesGroupByDate: Dictionary<Date, [Schedule]> = Dictionary()
-    
     let formatter = DateFormatter()
     let persistence: SchedulePersistence = SchedulePersistence()
-    
-    var currentMonthSymbol: String {
-        get {
-            let startDate = (calendarView.visibleDates().monthDates.first?.date)!
-            let month = Calendar.current.dateComponents([.month], from: startDate).month!
-            let monthString = DateFormatter().monthSymbols[month-1]
-            return monthString
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,15 +24,11 @@ class CalendarViewController: UIViewController {
         showToday()
     }
     
-    func setupViewNibs() {
+    private func setupViewNibs() {
         let calendarCellView = UINib(nibName: "CalendarCell", bundle: Bundle.main)
         calendarView.register(calendarCellView, forCellWithReuseIdentifier: Constants.calendarCellIdentifier)
         let tableCellView = UINib(nibName: "ScheduleTableViewCell", bundle: Bundle.main)
         tableView.register(tableCellView, forCellReuseIdentifier: Constants.scheduleCellIdentifier)
-    }
-    
-    func setupViewsOfCalendar(from visibleDates: DateSegmentInfo) {
-        visibleDates.monthDates.first.map{Calendar.current.component(.year, from: $0.date)}.map { navigationItem.title = "\($0) \(currentMonthSymbol)"}
     }
     
     func adjustCalendarViewHeight() {
@@ -52,21 +38,27 @@ class CalendarViewController: UIViewController {
     
     private func getSchedules() {
         if let startDate = calendarView.visibleDates().monthDates.first?.date  {
-            let endDate = Calendar.current.date(byAdding: .month, value: 1, to: startDate)
-            let data = persistence.load(from: startDate, to: endDate!)
-            schedulesGroupByDate = data.group{$0.dayOfTheEvent}
+            schedulesGroupByDate = persistence.load(from: startDate)
         }
     }
     
     private func showToday() {
-        calendarView.scrollToDate(Date(), triggerScrollToDateDelegate: true, animateScroll: false, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
+        let today = Date()
+        calendarView.scrollToDate(today, triggerScrollToDateDelegate: true, animateScroll: false, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
             self.getSchedules()
             self.calendarView.visibleDates {[unowned self] (visibleDates: DateSegmentInfo) in
-                self.setupViewsOfCalendar(from: visibleDates)
+                self.updateViewTitle(from: visibleDates)
             }
             self.adjustCalendarViewHeight()
-            self.calendarView.selectDates([Date()])
+            self.calendarView.selectDates([today])
         }
+    }
+    
+    private func updateViewTitle(from visibleDates: DateSegmentInfo) {
+        let startDate = (calendarView.visibleDates().monthDates.first?.date)!
+        let month = Calendar.current.dateComponents([.month], from: startDate).month!
+        let monthString = DateFormatter().monthSymbols[month-1]
+        visibleDates.monthDates.first.map{Calendar.current.component(.year, from: $0.date)}.map { navigationItem.title = "\($0) \(monthString)"}
     }
 }
 
@@ -171,7 +163,7 @@ extension CalendarViewController: JTAppleCalendarViewDelegate {
     
     func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
         getSchedules()
-        setupViewsOfCalendar(from: visibleDates)
+        updateViewTitle(from: visibleDates)
         select(onVisibleDates: visibleDates)
         
         view.layoutIfNeeded()

@@ -80,16 +80,19 @@ extension CalendarViewController {
     func configureCell(view: JTAppleCell?, cellState: CellState) {
         guard let myCustomCell = view as? CalendarCell else { return }
         
+        // hide if outiside current month
+        myCustomCell.isHidden = !(cellState.dateBelongsTo == .thisMonth)
+        
         myCustomCell.dayLabel.text = cellState.text
-        let cellHidden = cellState.dateBelongsTo != .thisMonth
-        myCustomCell.isHidden = cellHidden
+        myCustomCell.dayLabel.textColor = textColor(for: cellState)
+        
+        myCustomCell.selectedView.isHidden = !cellState.isSelected
         myCustomCell.selectedView.backgroundColor = UIColor.black
-        if Calendar.current.isDateInToday(cellState.date) {
+        if cellState.date.isToday() {
             myCustomCell.selectedView.backgroundColor = UIColor.red
         }
-        handleCellTextColor(view: myCustomCell, cellState: cellState)
-        myCustomCell.selectedView.isHidden = !cellState.isSelected
-//        handleCellSelection(view: myCustomCell, cellState: cellState)
+        
+        // display the indicator if there's at least one event
         if schedulesGroupByDate[cellState.date]?.count ?? 0 > 0 {
             myCustomCell.eventView.isHidden = false
         } else {
@@ -97,25 +100,17 @@ extension CalendarViewController {
         }
     }
     
-    func handleCellTextColor(view: CalendarCell, cellState: CellState) {
+    private func textColor(for cellState: CellState) -> UIColor {
         if cellState.isSelected {
-            view.dayLabel.textColor = UIColor.white
+            return .white
         }
-        else {
-            view.dayLabel.textColor = UIColor.black
-            if cellState.day == .sunday || cellState.day == .saturday {
-                view.dayLabel.textColor = UIColor.gray
-            }
+        if cellState.date.isToday() {
+            return .red
         }
-        
-        if Calendar.current.isDateInToday(cellState.date) {
-            if cellState.isSelected {
-                view.dayLabel.textColor = UIColor.white
-            }
-            else {
-                view.dayLabel.textColor = UIColor.red
-            }
+        if cellState.day == .sunday || cellState.day == .saturday {
+            return .gray
         }
+        return .black
     }
 }
 

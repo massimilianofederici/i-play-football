@@ -17,6 +17,10 @@ extension Date {
         let currentDateString = monthFormatter.string(from: Date())
         return dateString == currentDateString
     }
+    
+    func isToday() -> Bool {
+        return Calendar.current.isDateInToday(self)
+    }
 }
 
 extension Array {

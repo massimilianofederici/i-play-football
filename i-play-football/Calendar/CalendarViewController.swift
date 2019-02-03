@@ -82,25 +82,19 @@ extension CalendarViewController {
         
         myCustomCell.dayLabel.text = cellState.text
         let cellHidden = cellState.dateBelongsTo != .thisMonth
-        
         myCustomCell.isHidden = cellHidden
         myCustomCell.selectedView.backgroundColor = UIColor.black
-        
         if Calendar.current.isDateInToday(cellState.date) {
             myCustomCell.selectedView.backgroundColor = UIColor.red
         }
-        
         handleCellTextColor(view: myCustomCell, cellState: cellState)
-        handleCellSelection(view: myCustomCell, cellState: cellState)
+        myCustomCell.selectedView.isHidden = !cellState.isSelected
+//        handleCellSelection(view: myCustomCell, cellState: cellState)
         if schedulesGroupByDate[cellState.date]?.count ?? 0 > 0 {
             myCustomCell.eventView.isHidden = false
         } else {
             myCustomCell.eventView.isHidden = true
         }
-    }
-    
-    func handleCellSelection(view: CalendarCell, cellState: CellState) {
-        view.selectedView.isHidden = !cellState.isSelected
     }
     
     func handleCellTextColor(view: CalendarCell, cellState: CellState) {
@@ -140,7 +134,7 @@ extension CalendarViewController: JTAppleCalendarViewDataSource {
                                                  calendar: Calendar.current,
                                                  generateInDates: .forAllMonths,
                                                  generateOutDates: .tillEndOfGrid,
-                                                 firstDayOfWeek: .monday,
+                                                 firstDayOfWeek: .sunday,
                                                  hasStrictBoundaries: true)
         return parameters
     }

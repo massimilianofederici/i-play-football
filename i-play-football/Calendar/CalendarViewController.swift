@@ -17,16 +17,7 @@ class CalendarViewController: UIViewController {
     var schedulesGroupByDate: Dictionary<Date, [Schedule]> = Dictionary()
     
     let formatter = DateFormatter()
-    #warning("inject service")
     let persistence: SchedulePersistence = SchedulePersistence()
-    #warning("what is it??")
-//    var iii: Date?
-    
-    var numOfRowIsSix: Bool {
-        get {
-            return calendarView.visibleDates().outdates.count < 7
-        }
-    }
     
     var currentMonthSymbol: String {
         get {
@@ -39,29 +30,11 @@ class CalendarViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupViewNibs()
-        showToday(animate: false)
-        
-        #warning("do we need this?")
-        let gesturer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(gesture:)))
-        calendarView.addGestureRecognizer(gesturer)
-    }
-    
-    @objc func handleLongPress(gesture : UILongPressGestureRecognizer) {
-        let point = gesture.location(in: calendarView)
-        guard let cellStatus = calendarView.cellStatus(at: point) else {
-            return
-        }
-        
-        if calendarView.selectedDates.first != cellStatus.date {
-            calendarView.deselectAllDates()
-            calendarView.selectDates([cellStatus.date])
-        }
+        showToday()
     }
     
     func setupViewNibs() {
-        #warning("reference by constant")
         let calendarCellView = UINib(nibName: "CalendarCell", bundle: Bundle.main)
         calendarView.register(calendarCellView, forCellWithReuseIdentifier: Constants.calendarCellIdentifier)
         let tableCellView = UINib(nibName: "ScheduleTableViewCell", bundle: Bundle.main)
@@ -70,6 +43,30 @@ class CalendarViewController: UIViewController {
     
     func setupViewsOfCalendar(from visibleDates: DateSegmentInfo) {
         visibleDates.monthDates.first.map{Calendar.current.component(.year, from: $0.date)}.map { navigationItem.title = "\($0) \(currentMonthSymbol)"}
+    }
+    
+    func adjustCalendarViewHeight() {
+        let higher = calendarView.visibleDates().outdates.count < 7
+        separatorViewTopConstraint.constant = higher ? 0 : -calendarView.frame.height / CGFloat(Constants.numberOfRowsInCalendar)
+    }
+    
+    private func getSchedules() {
+        if let startDate = calendarView.visibleDates().monthDates.first?.date  {
+            let endDate = Calendar.current.date(byAdding: .month, value: 1, to: startDate)
+            let data = persistence.load(from: startDate, to: endDate!)
+            schedulesGroupByDate = data.group{$0.dayOfTheEvent}
+        }
+    }
+    
+    private func showToday() {
+        calendarView.scrollToDate(Date(), triggerScrollToDateDelegate: true, animateScroll: false, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
+            self.getSchedules()
+            self.calendarView.visibleDates {[unowned self] (visibleDates: DateSegmentInfo) in
+                self.setupViewsOfCalendar(from: visibleDates)
+            }
+            self.adjustCalendarViewHeight()
+            self.calendarView.selectDates([Date()])
+        }
     }
 }
 
@@ -84,35 +81,6 @@ extension CalendarViewController {
         } else {
             calendarView.selectDates([firstDateInMonth])
         }
-    }
-}
-
-extension CalendarViewController {
-    
-    #warning("do we this this overloaded version?")
-    func showTodayWithAnimate() {
-        showToday(animate: true)
-    }
-    
-    func showToday(animate:Bool) {
-        calendarView.scrollToDate(Date(), triggerScrollToDateDelegate: true, animateScroll: animate, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
-            self.getSchedules()
-            self.calendarView.visibleDates {[unowned self] (visibleDates: DateSegmentInfo) in
-                self.setupViewsOfCalendar(from: visibleDates)
-            }
-            self.adjustCalendarViewHeight()
-            self.calendarView.selectDates([Date()])
-        }
-    }
-}
-
-extension CalendarViewController {
-    func adjustCalendarViewHeight() {
-        adjustCalendarViewHeight(higher: self.numOfRowIsSix)
-    }
-    
-    func adjustCalendarViewHeight(higher: Bool) {
-        separatorViewTopConstraint.constant = higher ? 0 : -calendarView.frame.height / CGFloat(Constants.numberOfRowsInCalendar)
     }
 }
 
@@ -186,17 +154,6 @@ extension CalendarViewController: JTAppleCalendarViewDataSource {
     }
 }
 
-extension CalendarViewController {
-    
-    func getSchedules() {
-        if let startDate = calendarView.visibleDates().monthDates.first?.date  {
-            let endDate = Calendar.current.date(byAdding: .month, value: 1, to: startDate)
-            let data = persistence.load(from: startDate, to: endDate!)
-            schedulesGroupByDate = data.group{$0.dayOfTheEvent}
-        }
-    }
-}
-
 extension CalendarViewController: JTAppleCalendarViewDelegate {
     func calendar(_ calendar: JTAppleCalendarView, willDisplay cell: JTAppleCell, forItemAt date: Date, cellState: CellState, indexPath: IndexPath) {
         #warning("Extract to commond method")
@@ -215,10 +172,6 @@ extension CalendarViewController: JTAppleCalendarViewDelegate {
     func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
         getSchedules()
         setupViewsOfCalendar(from: visibleDates)
-//        if visibleDates.monthDates.first?.date == iii {
-//            return
-//        }
-//        iii = visibleDates.monthDates.first?.date
         select(onVisibleDates: visibleDates)
         
         view.layoutIfNeeded()

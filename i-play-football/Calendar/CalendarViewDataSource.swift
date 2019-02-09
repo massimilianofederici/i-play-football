@@ -20,7 +20,6 @@ extension CalendarViewController: JTAppleCalendarViewDataSource {
         let endDate = formatter.date(from: "2030 02 01")!
         let parameters = ConfigurationParameters(startDate: startDate,
                                                  endDate: endDate,
-                                                 generateOutDates: .off,
                                                  hasStrictBoundaries: true)
         return parameters
     }

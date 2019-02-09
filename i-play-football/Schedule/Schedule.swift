@@ -32,7 +32,7 @@ extension Schedule {
     static func match(dayOfEvent: Date) -> Schedule {
         let note = "Home"
         let hour = [Int](0...23).randomValue()
-        let  startTime = Calendar.current.date(byAdding: .hour, value: hour, to: dayOfEvent)!
+        let startTime = Calendar.current.date(byAdding: .hour, value: hour, to: dayOfEvent)!
         let endTime = Calendar.current.date(byAdding: .hour, value: 1, to: startTime)!
         return match(note: note, startTime: startTime, endTime: endTime)
     }
@@ -78,10 +78,6 @@ class Schedules {
     func hasEvent(for date: Date) -> Bool {
         return self[date].count > 0
     }
-    
-    func all() -> [Schedule] {
-        return self.storage
-    }
 }
 
 class SchedulePersistence {
@@ -89,38 +85,34 @@ class SchedulePersistence {
     private var mockData: [Schedule] {
         var data:[Schedule] = []
         let userCalendar = Calendar.current
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyy MM dd"
-        let years: [Int] = Array(2017...2030)
-        let months: [Int] = Array(0...11)
+        let years: [Int] = Array(2019...2030)
+        let months: [Int] = Array(1...12)
         years.forEach{ year in
             months.forEach{ month in
                 var trainingDate = DateComponents()
-                trainingDate.year = year
+                trainingDate.year = 2019
                 trainingDate.month = month
                 trainingDate.day = 11
                 data.append(Schedule.trainingSession(dayOfEvent: userCalendar.date(from: trainingDate)!))
                 
                 var matchDate = DateComponents()
-                matchDate.year = year
+                matchDate.year = 2019
                 matchDate.month = month
                 matchDate.day = 15
                 data.append(Schedule.match(dayOfEvent: userCalendar.date(from: matchDate)!))
             }
         }
-        
         return data;
     }
     
-    private func load(from: Date, to: Date) -> [Schedule] {
-        print("Loading Schedules from \(from) to \(to)")
+    private func load(_ dateInterval: DateInterval) -> [Schedule] {
         return mockData.filter{s in
-            s.startTime > from && s.startTime < to
+            dateInterval.contains(s.startTime)
         }
     }
     
-    func load(from: Date, to: Date) -> Schedules {
-        let data: [Schedule] = load(from: from, to: to)
+    func load(dateInterval: DateInterval) -> Schedules {
+        let data: [Schedule] = load(dateInterval)
         return Schedules(data: data)
     }
     

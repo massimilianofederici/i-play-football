@@ -18,6 +18,14 @@ extension Date {
         return dateString == currentDateString
     }
     
+    func endOfMonth() -> Date {
+        return Calendar.current.date(byAdding: DateComponents(month: 1, day: -1), to: self.startOfMonth())!
+    }
+    
+    func startOfMonth() -> Date {
+        return Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: Calendar.current.startOfDay(for: self)))!
+    }
+    
     func isToday() -> Bool {
         return Calendar.current.isDateInToday(self)
     }
@@ -26,22 +34,5 @@ extension Date {
 extension Array {
     func randomValue() -> Element {
         return self[Int(arc4random_uniform(UInt32(self.count)))]
-    }
-}
-
-public extension Sequence {
-    func group<U: Hashable>(by key: (Iterator.Element) -> U) -> [U:[Iterator.Element]] {
-        var categories: [U: [Iterator.Element]] = [:]
-        for element in self {
-            let key = key(element)
-            if categories[key] == nil {
-                categories[key] = [element]
-            }
-            else {
-                categories[key]?.append(element)
-            }
-        }
-        
-        return categories
     }
 }

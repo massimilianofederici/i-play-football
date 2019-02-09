@@ -25,13 +25,10 @@ extension CalendarViewController: JTAppleCalendarViewDelegate {
     }
     
     // invoked on scrolling
-    func calendar(_ calendar: JTAppleCalendarView, willScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
+    func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
         let firstDayOfMonth: Date = visibleDates.monthDates.first!.date
-        let lastDayOfMonth: Date = visibleDates.monthDates.last!.date
         let initialSelection = firstDayOfMonth.isThisMonth() ? Date() : firstDayOfMonth
-        let to: Date = Calendar.current.date(byAdding: .month, value: 1, to: lastDayOfMonth)!
-        getSchedules(from: firstDayOfMonth, to: to)
-        select(date: initialSelection)
+        select(date: initialSelection, animate: true)
     }
     
     // invoked on date selection

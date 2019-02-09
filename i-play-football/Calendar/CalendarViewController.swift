@@ -3,6 +3,11 @@ import JTAppleCalendar
 #warning("fix indicator for scheduled events")
 class CalendarViewController: UIViewController {
     
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy MM dd"
+        return formatter
+    }()
     let calendarCellIdentifier = "calendarCell"
     let scheduleCellIdentifier = "scheduleDetail"
     let calendarDateFormat = "yyyy MM dd"
@@ -12,21 +17,26 @@ class CalendarViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var separatorViewTopConstraint: NSLayoutConstraint!
     
-    var schedulesGroupByDate: Dictionary<Date, [Schedule]> = Dictionary()
+    var schedules: Schedules = Schedules.empty()
     let persistence: SchedulePersistence = SchedulePersistence()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViewNibs()
-        select(date: Date())
+        let today: Date = Date()
+        self.getSchedules(from: today, to: Calendar.current.date(byAdding: .month, value: 2, to: today)!)
+        calendarView.scrollToDate(today, triggerScrollToDateDelegate: true, animateScroll: false, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
+            self.updateViewTitle()
+            self.adjustCalendarViewHeight()
+            self.calendarView.selectDates([today], triggerSelectionDelegate: true)
+        }
     }
     
     func select(date: Date) {
-        self.getSchedules(date)
-        calendarView.scrollToDate(date, triggerScrollToDateDelegate: true, animateScroll: false, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
-            self.updateViewTitle(from: self.calendarView.visibleDates())
+        calendarView.scrollToDate(date, triggerScrollToDateDelegate: false, animateScroll: true, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
+            self.updateViewTitle()
             self.adjustCalendarViewHeight()
-            self.calendarView.selectDates([date])
+            self.calendarView.selectDates([date], triggerSelectionDelegate: true)
         }
     }
     
@@ -42,14 +52,14 @@ class CalendarViewController: UIViewController {
         separatorViewTopConstraint.constant = higher ? 0 : -calendarView.frame.height / CGFloat(numberOfRowsInCalendar)
     }
     
-    private func getSchedules(_ startDate: Date) {
-        schedulesGroupByDate = persistence.load(from: startDate).group{$0.dayOfTheEvent}
+    func getSchedules(from: Date, to: Date) {
+        schedules = persistence.load(from: from, to: to)
     }
     
-    private func updateViewTitle(from visibleDates: DateSegmentInfo) {
-        let startDate = (calendarView.visibleDates().monthDates.first?.date)!
-        let month = Calendar.current.dateComponents([.month], from: startDate).month!
-        let monthString = DateFormatter().monthSymbols[month-1]
-        visibleDates.monthDates.first.map{Calendar.current.component(.year, from: $0.date)}.map { navigationItem.title = "\($0) \(monthString)"}
+    private func updateViewTitle() {
+        let startDate: Date = calendarView.visibleDates().monthDates.first!.date
+        let year = Calendar.current.component(.year, from: startDate)
+        let month = Calendar.current.component(.month, from: startDate)
+        navigationItem.title = "\(dateFormatter.monthSymbols[month-1]) \(year)"
     }
 }

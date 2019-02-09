@@ -1,26 +1,16 @@
 import UIKit
 
-struct Schedule {
+struct Schedule: CustomStringConvertible {
     var title: String
     var note: String
     var startTime: Date
     var endTime: Date
     var categoryColor: UIColor
-    var dayOfTheEvent: Date
+    
+    var description: String {
+        return "\(startTime)"
+    }
 }
-
-//extension Schedule {
-////    init(fromStartDate: Date) {
-//////        title = ["Meet Willard", "Buy a milk", "Read a book"].randomValue()
-////        note = ["hurry", "In office", "In New york city"].randomValue()
-//////        categoryColor = [.red, .orange, .purple, .blue, .black].randomValue()
-////
-////        let hour = [Int](0...23).randomValue()
-////        startTime = Calendar.current.date(byAdding: .hour, value: hour, to: fromStartDate)!
-////        endTime = Calendar.current.date(byAdding: .hour, value: 1, to: startTime)!
-////        dayOfTheEvent = Calendar.current.startOfDay(for: startTime)
-////    }
-//}
 
 extension Schedule {
     
@@ -33,7 +23,7 @@ extension Schedule {
     }
     
     static func trainingSession(note: String, startTime: Date, endTime: Date) -> Schedule {
-        return Schedule(title: "Training", note: note, startTime: startTime, endTime: endTime, categoryColor: .red, dayOfTheEvent: Calendar.current.startOfDay(for: startTime))
+        return Schedule(title: "Training", note: note, startTime: startTime, endTime: endTime, categoryColor: .red)
     }
 }
 
@@ -48,7 +38,7 @@ extension Schedule {
     }
     
     static func match(note: String, startTime: Date, endTime: Date) -> Schedule {
-        return Schedule(title: "Match", note: note, startTime: startTime, endTime: endTime, categoryColor: .green, dayOfTheEvent: Calendar.current.startOfDay(for: startTime))
+        return Schedule(title: "Match", note: note, startTime: startTime, endTime: endTime, categoryColor: .green)
     }
 }
 
@@ -62,20 +52,76 @@ extension Schedule : Equatable, Comparable {
     }
 }
 
-class SchedulePersistence {
+class Schedules {
     
-    private func load(from: Date, to: Date) -> [Schedule] {
-        var data:[Schedule] = []
-        let today: Date = Calendar.current.startOfDay(for: from)
-        data.append(Schedule.trainingSession(dayOfEvent: today))
-        let date = Calendar.current.date(byAdding: .day, value: 5, to: today)
-        data.append(Schedule.match(dayOfEvent: date!))
-        return data
+    private static var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy"
+        return formatter
+    }()
+    
+    private let storage: [Schedule]
+    
+    static func empty() -> Schedules {
+        return Schedules(data: [])
     }
     
-    func load(from: Date) -> [Schedule] {
-        let to:Date = Calendar.current.date(byAdding: .month, value: 1, to: from)!
-        return load(from: from, to: to)
+    init(data: [Schedule]) {
+        self.storage = data
+    }
+    
+    subscript(_ date: Date) -> [Schedule] {
+        let formatted: String = Schedules.dateFormatter.string(from: date)
+        return storage.filter{Schedules.dateFormatter.string(from: $0.startTime) == formatted}
+    }
+    
+    func hasEvent(for date: Date) -> Bool {
+        return self[date].count > 0
+    }
+    
+    func all() -> [Schedule] {
+        return self.storage
+    }
+}
+
+class SchedulePersistence {
+    
+    private var mockData: [Schedule] {
+        var data:[Schedule] = []
+        let userCalendar = Calendar.current
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyy MM dd"
+        let years: [Int] = Array(2017...2030)
+        let months: [Int] = Array(0...11)
+        years.forEach{ year in
+            months.forEach{ month in
+                var trainingDate = DateComponents()
+                trainingDate.year = year
+                trainingDate.month = month
+                trainingDate.day = 11
+                data.append(Schedule.trainingSession(dayOfEvent: userCalendar.date(from: trainingDate)!))
+                
+                var matchDate = DateComponents()
+                matchDate.year = year
+                matchDate.month = month
+                matchDate.day = 15
+                data.append(Schedule.match(dayOfEvent: userCalendar.date(from: matchDate)!))
+            }
+        }
+        
+        return data;
+    }
+    
+    private func load(from: Date, to: Date) -> [Schedule] {
+        print("Loading Schedules from \(from) to \(to)")
+        return mockData.filter{s in
+            s.startTime > from && s.startTime < to
+        }
+    }
+    
+    func load(from: Date, to: Date) -> Schedules {
+        let data: [Schedule] = load(from: from, to: to)
+        return Schedules(data: data)
     }
     
 }

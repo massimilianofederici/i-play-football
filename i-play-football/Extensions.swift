@@ -21,14 +21,6 @@ extension Date {
     func isToday() -> Bool {
         return Calendar.current.isDateInToday(self)
     }
-    
-    func isFirstDayOfTheMonth() -> Bool {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd"
-        
-        let dateString = formatter.string(from: self)
-        return dateString == "01"
-    }
 }
 
 extension Array {

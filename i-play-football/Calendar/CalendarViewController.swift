@@ -24,9 +24,7 @@ class CalendarViewController: UIViewController {
     func select(date: Date) {
         self.getSchedules(date)
         calendarView.scrollToDate(date, triggerScrollToDateDelegate: true, animateScroll: false, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
-            self.calendarView.visibleDates {[unowned self] (visibleDates: DateSegmentInfo) in
-                self.updateViewTitle(from: visibleDates)
-            }
+            self.updateViewTitle(from: self.calendarView.visibleDates())
             self.adjustCalendarViewHeight()
             self.calendarView.selectDates([date])
         }

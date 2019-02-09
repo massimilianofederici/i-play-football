@@ -28,7 +28,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   ColorPickerRow:
-    :commit: fafd3328fb729cee2e06a95e285631aa80cf04fe
+    :commit: 95cda5c0a6d793b687fb2c983235caccdabb7a87
     :git: https://github.com/EurekaCommunity/ColorPickerRow
 
 SPEC CHECKSUMS:
@@ -40,4 +40,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: f6019d92d5bff0f98663d65bd10cb7263ad9fd34
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.0

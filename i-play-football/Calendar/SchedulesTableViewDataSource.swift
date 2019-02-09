@@ -14,9 +14,7 @@ extension CalendarViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: scheduleCellIdentifier, for: indexPath) as! ScheduleTableViewCell
         cell.selectionStyle = .none
-        calendarView.selectedDates.first.map{d in
-            cell.schedule = schedulesGroupByDate[d]?[indexPath.row]
-        }
+        calendarView.selectedDates.first.map{cell.schedule = schedulesGroupByDate[$0]?[indexPath.row]}
         return cell
     }
     

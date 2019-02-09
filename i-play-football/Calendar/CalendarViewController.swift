@@ -5,7 +5,7 @@ class CalendarViewController: UIViewController {
     
     let calendarCellIdentifier = "calendarCell"
     let scheduleCellIdentifier = "scheduleDetail"
-    let calendarDateFormat = "yyy MM dd"
+    let calendarDateFormat = "yyyy MM dd"
     let numberOfRowsInCalendar = 6
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
@@ -22,8 +22,8 @@ class CalendarViewController: UIViewController {
     }
     
     func select(date: Date) {
+        self.getSchedules(date)
         calendarView.scrollToDate(date, triggerScrollToDateDelegate: true, animateScroll: false, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
-            self.getSchedules()
             self.calendarView.visibleDates {[unowned self] (visibleDates: DateSegmentInfo) in
                 self.updateViewTitle(from: visibleDates)
             }
@@ -44,10 +44,8 @@ class CalendarViewController: UIViewController {
         separatorViewTopConstraint.constant = higher ? 0 : -calendarView.frame.height / CGFloat(numberOfRowsInCalendar)
     }
     
-    private func getSchedules() {
-        if let startDate = calendarView.visibleDates().monthDates.first?.date  {
-            schedulesGroupByDate = persistence.load(from: startDate)
-        }
+    private func getSchedules(_ startDate: Date) {
+        schedulesGroupByDate = persistence.load(from: startDate).group{$0.dayOfTheEvent}
     }
     
     private func updateViewTitle(from visibleDates: DateSegmentInfo) {

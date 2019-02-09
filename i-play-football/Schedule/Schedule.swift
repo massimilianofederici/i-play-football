@@ -73,10 +73,9 @@ class SchedulePersistence {
         return data
     }
     
-    func load(from: Date) -> Dictionary<Date, [Schedule]> {
+    func load(from: Date) -> [Schedule] {
         let to:Date = Calendar.current.date(byAdding: .month, value: 1, to: from)!
-        let data = load(from: from, to: to)
-        return data.group{$0.dayOfTheEvent}
+        return load(from: from, to: to)
     }
     
 }

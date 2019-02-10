@@ -14,6 +14,10 @@ struct Player: Codable, FetchableRecord, MutablePersistableRecord {
     var name: String {
         return "\(firstName) \(lastName)"
     }
+    
+    static func findAll() {
+        
+    }
 }
 
 enum PlayerPosition: String, CaseIterable, Codable {

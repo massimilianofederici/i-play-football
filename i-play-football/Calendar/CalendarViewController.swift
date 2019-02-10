@@ -14,8 +14,7 @@ class CalendarViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var separatorViewTopConstraint: NSLayoutConstraint!
     
-    var schedules: Schedules = Schedules.empty()
-    private let persistence: SchedulePersistence = SchedulePersistence()
+    var schedules: [Schedule] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +27,7 @@ class CalendarViewController: UIViewController {
     }
     
     func prefetchSchedules(from: Date) {
-        schedules = persistence.load(dateInterval: DateInterval(start: from.startOfMonth(), end: from.endOfMonth()))
+        schedules = Schedule.findAll(interval: DateInterval(start: from.startOfMonth(), end: from.endOfMonth()))
     }
     
     func select(date: Date) {

@@ -15,6 +15,7 @@ target 'i-play-football' do
   pod 'ColorPickerRow', :git => 'https://github.com/EurekaCommunity/ColorPickerRow'
   pod 'UIColor_Hex_Swift'
   pod 'JTAppleCalendar', '~> 7.0'
+  pod 'GRDB.swift'
 
   target 'i-play-footballTests' do
     inherit! :search_paths

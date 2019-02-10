@@ -5,7 +5,7 @@ class PlayersViewController: UITableViewController {
     
     @IBOutlet weak var addButton: UIBarButtonItem!
     
-    let persistence = PlayersPersistence()
+    let persistence = PlayerPersistence()
     
     lazy var players: [Player] = { [unowned self] in
         return loadPlayers()
@@ -17,14 +17,14 @@ class PlayersViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PlainCell", for: indexPath)
-        cell.textLabel?.text = players[indexPath.row].name()
+        cell.textLabel?.text = players[indexPath.row].name
         return cell
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            self.players.remove(at: indexPath.row)
-            self.saveAndReload()
+            persistence.delete(player: &self.players[indexPath.row])
+            self.reload()
         }
     }
     
@@ -34,7 +34,7 @@ class PlayersViewController: UITableViewController {
         let detailsController:PlayerDetailsViewController = next.topViewController as! PlayerDetailsViewController
         switch identifier {
         case "addPlayer":
-            detailsController.player = Player(firstName: "", lastName: "")
+            detailsController.player = Player(firstName: "", lastName: "", dateOfBirth: nil, preferredPosition: nil, profilePicture: nil, notes: "", id: nil)
         case "playerDetails":
             let selection: Int! = self.tableView.indexPathForSelectedRow?.row
             detailsController.player = players[selection]
@@ -50,27 +50,17 @@ class PlayersViewController: UITableViewController {
     
     @IBAction func saveOrUpdate(unwindSegue: UIStoryboardSegue) {
         let detailsController:PlayerDetailsViewController = unwindSegue.source as! PlayerDetailsViewController
-        detailsController.player.map{ p in
-            p.id == nil ? savePlayer(p) : updatePlayer(p)
-        }
-    }
-    
-    private func updatePlayer(_ player: Player) {
-        self.saveAndReload()
-    }
-    
-    private func savePlayer(_ player: Player) {
-        self.players.append(player)
-        self.saveAndReload()
+        persistence.save(player: &detailsController.player!)
+        reload()
     }
     
     private func loadPlayers() -> [Player] {
-        return self.persistence.load().sorted();
+        return self.persistence.findAll();
     }
     
-    private func saveAndReload() {
+    private func reload() {
+        #warning("fix using observers")
         DispatchQueue.main.async {
-            self.persistence.save(self.players)
             self.players = self.loadPlayers();
             self.tableView.reloadData()
         }

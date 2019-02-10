@@ -21,7 +21,7 @@ class ScheduleTableViewCell: UITableViewCell {
             noteLabel.text = schedule.note
             startTimeLabel.text = dateFormatter.string(from: schedule.startTime)
             endTimeLabel.text = dateFormatter.string(from: schedule.endTime)
-            categoryLine.backgroundColor = schedule.categoryColor
+            categoryLine.backgroundColor = UIColor(schedule.categoryColor)
         }
     }
 }

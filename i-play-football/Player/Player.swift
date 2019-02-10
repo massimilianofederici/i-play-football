@@ -1,6 +1,7 @@
 import Foundation
+import GRDB
 
-class Player: Codable {
+struct Player: Codable, FetchableRecord, MutablePersistableRecord {
 
     var firstName: String
     var lastName: String
@@ -8,33 +9,10 @@ class Player: Codable {
     var preferredPosition: PlayerPosition?
     var profilePicture: Data?
     var notes: String?
-    var id: UUID?
+    var id: Int?
     
-    init(firstName: String, lastName:String) {
-        self.firstName = firstName
-        self.lastName = lastName
-    }
-    
-    func name() -> String {
+    var name: String {
         return "\(firstName) \(lastName)"
-    }
-}
-
-extension Player: Comparable, Equatable {
-    
-    static func < (lhs: Player, rhs: Player) -> Bool {
-        return lhs.name() < rhs.name()
-    }
-    
-    static func ==(lhs: Player, rhs: Player) -> Bool {
-        return lhs.name() == rhs.name()
-    }
-}
-
-extension Player {
-    
-    func prepareForSave() {
-        self.id = self.id ?? UUID()
     }
 }
 
@@ -51,26 +29,25 @@ enum PlayerPosition: String, CaseIterable, Codable {
     }
 }
 
-class PlayersPersistence {
+class PlayerPersistence {
     
-    private let preferenceName = "players"
-    private let preferences = UserDefaults.standard
-    private let encoder = JSONEncoder()
-    private let decoder = JSONDecoder()
-    
-    func save(_ players: [Player]) {
-        players.forEach{ $0.prepareForSave() }
-        let encoded: Data? = try? encoder.encode(players)
-        encoded.map{data in
-            preferences.setValue(data, forKey: preferenceName)
-            preferences.synchronize()
+    func findAll() -> [Player] {
+        return try!dbQueue.read { db in
+            try Player.all().order(Column("lastName"), Column("firstName")).fetchAll(db)
         }
     }
     
-    func load() -> [Player] {
-        return preferences.data(forKey: preferenceName).flatMap{ data in
-            try? decoder.decode([Player].self, from: data)
-            } ?? []
+    func delete(player: inout Player) {
+        return try! dbQueue.inDatabase { db in
+            return try player.delete(db)
+        }
     }
+    
+    func save(player: inout Player) {
+        try! dbQueue.inDatabase { db in
+            try player.save(db)
+        }
+    }
+    
 }
 

@@ -29,6 +29,10 @@ extension Date {
     func isToday() -> Bool {
         return Calendar.current.isDateInToday(self)
     }
+    
+    var millisecondsSince1970:Int {
+        return Int((self.timeIntervalSince1970 * 1000.0).rounded())
+    }
 }
 
 extension Array {

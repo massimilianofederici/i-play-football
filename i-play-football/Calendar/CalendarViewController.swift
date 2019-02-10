@@ -5,11 +5,12 @@ class CalendarViewController: UIViewController {
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy MM dd"
+        formatter.timeZone = Calendar.current.timeZone
+        formatter.locale = Calendar.current.locale
         return formatter
     }()
     let calendarCellIdentifier = "calendarCell"
     let scheduleCellIdentifier = "scheduleDetail"
-    let calendarDateFormat = "yyyy MM dd"
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var tableView: UITableView!
@@ -22,15 +23,24 @@ class CalendarViewController: UIViewController {
         super.viewDidLoad()
         setupViewNibs()
         let today: Date = Date()
-        select(date: today, animate: false)
+        prefetchSchedules(from: today)
+        calendarView.scrollToDate(today, triggerScrollToDateDelegate: false, animateScroll: false, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
+            self.select(date: today)
+        }
     }
     
-    func select(date: Date, animate: Bool) {
-        prefetchSchedules(from: date)
-        calendarView.scrollToDate(date, triggerScrollToDateDelegate: false, animateScroll: animate, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
-            self.updateViewTitle()
-            self.adjustCalendarViewHeight()
-            self.calendarView.selectDates([date], triggerSelectionDelegate: true)
+    func prefetchSchedules(from: Date) {
+        let end = from.endOfMonth()
+        let start = from.startOfMonth()
+        schedules = persistence.load(dateInterval: DateInterval(start: start, end: end))
+    }
+    
+    func select(date: Date) {
+        self.calendarView.selectDates([date])
+        self.updateViewTitle()
+        self.adjustCalendarViewHeight()
+        UIView.animate(withDuration: 0.5) { [unowned self] in
+            self.view.layoutIfNeeded()
         }
     }
     
@@ -44,12 +54,6 @@ class CalendarViewController: UIViewController {
     private func adjustCalendarViewHeight() {
         let higher = calendarView.visibleDates().outdates.count < 7
         separatorViewTopConstraint.constant = higher ? 0 : -calendarView.frame.height / CGFloat(6)
-    }
-    
-    private func prefetchSchedules(from: Date) {
-        let end = Calendar.current.date(byAdding: .month, value: 2, to: from.endOfMonth())
-        let start = Calendar.current.date(byAdding: .month, value: -2, to: from.startOfMonth())
-        schedules = persistence.load(dateInterval: DateInterval(start: start!, end: end!))
     }
     
     private func updateViewTitle() {

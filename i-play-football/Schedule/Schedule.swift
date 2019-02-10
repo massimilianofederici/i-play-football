@@ -90,13 +90,13 @@ class SchedulePersistence {
         years.forEach{ year in
             months.forEach{ month in
                 var trainingDate = DateComponents()
-                trainingDate.year = 2019
+                trainingDate.year = year
                 trainingDate.month = month
                 trainingDate.day = 11
                 data.append(Schedule.trainingSession(dayOfEvent: userCalendar.date(from: trainingDate)!))
                 
                 var matchDate = DateComponents()
-                matchDate.year = 2019
+                matchDate.year = year
                 matchDate.month = month
                 matchDate.day = 15
                 data.append(Schedule.match(dayOfEvent: userCalendar.date(from: matchDate)!))

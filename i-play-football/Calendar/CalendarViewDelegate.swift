@@ -28,7 +28,8 @@ extension CalendarViewController: JTAppleCalendarViewDelegate {
     func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
         let firstDayOfMonth: Date = visibleDates.monthDates.first!.date
         let initialSelection = firstDayOfMonth.isThisMonth() ? Date() : firstDayOfMonth
-        select(date: initialSelection, animate: true)
+        prefetchSchedules(from: initialSelection)
+        calendar.reloadData{ self.select(date: initialSelection) }
     }
     
     // invoked on date selection
@@ -52,13 +53,12 @@ extension CalendarViewController: JTAppleCalendarViewDelegate {
         cell.dayLabel.text = cellState.text
         cell.dayLabel.textColor = textColor(for: cellState)
         
-        cell.selectedView.isHidden = !cellState.isSelected
         cell.selectedView.backgroundColor = UIColor.black
         if cellState.date.isToday() {
             cell.selectedView.backgroundColor = UIColor.red
         }
+        cell.selectedView.isHidden = !cellState.isSelected
         
-        // display the indicator if there's at least one event
         cell.eventView.isHidden = !schedules.hasEvent(for: cellState.date)
     }
     

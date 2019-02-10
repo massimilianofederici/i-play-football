@@ -13,13 +13,13 @@ extension CalendarViewController: JTAppleCalendarViewDelegate {
     
     func calendar(_ calendar: JTAppleCalendarView, willDisplay cell: JTAppleCell, forItemAt date: Date, cellState: CellState, indexPath: IndexPath) {
         let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: calendarCellIdentifier,
-                                                       for: indexPath) as! CalendarCell
+                                                       for: indexPath)
         configureCell(view: cell, cellState: cellState)
     }
     
     func calendar(_ calendar: JTAppleCalendarView, cellForItemAt date: Date, cellState: CellState, indexPath: IndexPath) -> JTAppleCell {
         let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: calendarCellIdentifier,
-                                                       for: indexPath) as! CalendarCell
+                                                       for: indexPath)
         configureCell(view: cell, cellState: cellState)
         return cell
     }
@@ -27,25 +27,25 @@ extension CalendarViewController: JTAppleCalendarViewDelegate {
     // invoked on scrolling
     func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
         let firstDayOfMonth: Date = visibleDates.monthDates.first!.date
-        let initialSelection = firstDayOfMonth.isThisMonth() ? Date() : firstDayOfMonth
-        prefetchSchedules(from: initialSelection)
-        calendar.reloadData{ self.select(date: initialSelection) }
+        prefetchSchedules(from: firstDayOfMonth)
+        let dayToSelect = firstDayOfMonth.isThisMonth() ? Date() : firstDayOfMonth
+        calendar.reloadData{ self.select(date: dayToSelect) }
     }
     
     // invoked on date selection
     func calendar(_ calendar: JTAppleCalendarView, didSelectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
-        configureCell(view: cell, cellState: cellState)
+        cell.map {self.configureCell(view: $0, cellState: cellState)}
         tableView.reloadData()
         tableView.contentOffset = CGPoint()
     }
     
     // invoked on date deselection
     func calendar(_ calendar: JTAppleCalendarView, didDeselectDate date: Date, cell: JTAppleCell?, cellState: CellState) {
-        configureCell(view: cell, cellState: cellState)
+        cell.map {self.configureCell(view: $0, cellState: cellState)}
     }
     
     private func configureCell(view: JTAppleCell?, cellState: CellState) {
-        guard let cell = view as? CalendarCell else { return }
+        let cell = view as! CalendarCell
         
         // hide if outiside current month
         cell.isHidden = !(cellState.dateBelongsTo == .thisMonth)

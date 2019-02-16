@@ -1,15 +1,24 @@
 import Foundation
 import UIKit
+import GRDB
 
 class PlayersViewController: UITableViewController {
     
     @IBOutlet weak var addButton: UIBarButtonItem!
     
-    let persistence = PlayerPersistence()
+    private var dbListener: TransactionObserver?
     
-    lazy var players: [Player] = { [unowned self] in
-        return loadPlayers()
-        }()
+    private var players: [Player] = []
+    
+    override func viewDidLoad() {
+        dbListener = try! ValueObservation
+            .trackingAll(Player.all())
+            .start(in: dbQueue) { data in
+                self.players = data
+                self.tableView.reloadData()
+        }
+            
+    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return players.count
@@ -23,8 +32,9 @@ class PlayersViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            persistence.delete(player: &self.players[indexPath.row])
-            self.reload()
+            let _ = try! dbQueue.write { db in
+                try players[indexPath.row].delete(db)
+            }
         }
     }
     
@@ -44,25 +54,13 @@ class PlayersViewController: UITableViewController {
     }
     
     @IBAction func cancelChanges(unwindSegue: UIStoryboardSegue) {
-        self.players = self.loadPlayers();
-        self.tableView.reloadData()
     }
     
     @IBAction func saveOrUpdate(unwindSegue: UIStoryboardSegue) {
         let detailsController:PlayerDetailsViewController = unwindSegue.source as! PlayerDetailsViewController
-        persistence.save(player: &detailsController.player!)
-        reload()
-    }
-    
-    private func loadPlayers() -> [Player] {
-        return self.persistence.findAll();
-    }
-    
-    private func reload() {
-        #warning("fix using observers")
-        DispatchQueue.main.async {
-            self.players = self.loadPlayers();
-            self.tableView.reloadData()
+        let _ = try! dbQueue.write { db in
+            try detailsController.player?.save(db)
         }
     }
+    
 }

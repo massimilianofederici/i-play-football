@@ -28,31 +28,3 @@ enum PlayerPosition: String, CaseIterable, Codable {
         return PlayerPosition.allCases.first(where: { p in p.rawValue == term})
     }
 }
-
-//class PlayerPersistence {
-//    
-//    func findAll() -> [Player] {
-//        return try!dbQueue.read { db in
-//            try Player.all().order(Column("lastName"), Column("firstName")).fetchAll(db)
-//        }
-//    }
-//    
-//    func delete(player: inout Player) {
-//        return try! dbQueue.inDatabase { db in
-//            return try player.delete(db)
-//        }
-//    }
-//    
-//    func save(player: inout Player) {
-//        try! dbQueue.inDatabase { db in
-//            try player.save(db)
-//        }
-////        let request = player.save(<#T##db: Database##Database#>)
-////        let observation = DatabaseRegionObservation(tracking: request)
-////        let observer = observation.start(in: dbQueue) { db: Database in
-////            print("Players have changed.")
-////        }
-//    }
-//    
-//}
-

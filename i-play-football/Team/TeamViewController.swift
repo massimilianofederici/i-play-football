@@ -2,15 +2,16 @@ import Foundation
 import UIKit
 import Eureka
 import ColorPickerRow
+import GRDB
 
 class TeamViewController: FormViewController {
-    
-    let persistence = TeamPersistence()
     
     @IBOutlet weak var saveButton: UIBarButtonItem!
     
     lazy var team: Team = { [unowned self] in
-        return self.persistence.load()
+        return try! dbQueue.read {db in
+            try Team.all().limit(1).fetchAll(db).first
+        } ?? Team.aTeam()
         }()
     
     lazy var nameField: TextRow = TextRow() { row in
@@ -52,11 +53,12 @@ class TeamViewController: FormViewController {
         self.team.name = nameField.value!
         self.team.coach = coachField.value
         self.team.colour = colourField.value?.hexString()
-        persistence.save(team: self.team)
+        try! dbQueue.write{ db in
+            try team.save(db)
+        }
     }
     
     @IBAction func cancel() {
-        self.team = persistence.load()
         setInitialValues()
         [nameField, coachField, colourField].forEach { row in row.reload() }
     }

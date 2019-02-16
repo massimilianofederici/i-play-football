@@ -19,6 +19,7 @@ struct AppDatabase {
     
     static var migrator: DatabaseMigrator {
         var migrator = DatabaseMigrator()
+
         migrator.registerMigration("createSchedules") { db in
             try db.create(table: "schedule") { t in
                 t.autoIncrementedPrimaryKey("id")
@@ -29,6 +30,7 @@ struct AppDatabase {
                 t.column("categoryColor", .text).notNull()
             }
         }
+        
         migrator.registerMigration("createPlayers") { db in
             try db.create(table: "player") { t in
                 t.autoIncrementedPrimaryKey("id")
@@ -38,6 +40,16 @@ struct AppDatabase {
                 t.column("notes", .text)
                 t.column("preferredPosition", .text)
                 t.column("profilePicture", .blob)
+            }
+        }
+        
+        migrator.registerMigration("createTeams") { db in
+            try db.create(table: "team") { t in
+                t.autoIncrementedPrimaryKey("id")
+                t.column("name", .text).notNull()
+                t.column("coach", .text).notNull()
+                t.column("colour", .text)
+                t.column("notes", .text)
             }
         }
         return migrator

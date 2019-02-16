@@ -15,7 +15,7 @@ class PlayerDetailsViewController: FormViewController {
         row.add(rule: RuleRequired())
         row.value = player?.firstName
         row.validationOptions = .validatesOnChange
-        row.cellUpdate(handleValidation)
+        row.cellUpdate{_,_ in self.handleValidation()}
         row.onChange {v in
             self.player?.firstName = v.value ?? ""
         }
@@ -27,7 +27,7 @@ class PlayerDetailsViewController: FormViewController {
         row.add(rule: RuleRequired())
         row.value = player?.lastName
         row.validationOptions = .validatesOnChange
-        row.cellUpdate(handleValidation)
+        row.cellUpdate{_,_ in self.handleValidation()}
         row.onChange {v in
             self.player?.lastName = v.value ?? ""
         }
@@ -36,8 +36,8 @@ class PlayerDetailsViewController: FormViewController {
     lazy var notesField: TextAreaRow = TextAreaRow() { row in
         row.title = "Notes"
         row.placeholder = "Notes"
-        row.add(rule: RuleRequired())
         row.value = player?.notes
+        row.cellUpdate{_,_ in self.handleValidation()}
         row.onChange {v in
             self.player?.notes = v.value
         }
@@ -46,6 +46,7 @@ class PlayerDetailsViewController: FormViewController {
     lazy var dateOfBirthField: DateRow = DateRow() { row in
         row.title = "Date of Birth"
         row.value = player?.dateOfBirth
+        row.cellUpdate{_,_ in self.handleValidation()}
         row.onChange { v in
             self.player?.dateOfBirth = v.value
         }
@@ -55,6 +56,7 @@ class PlayerDetailsViewController: FormViewController {
         row.title = "Preferred Position"
         row.options = PlayerPosition.allCases.map{o in o.rawValue}
         row.value = player?.preferredPosition?.rawValue
+        row.cellUpdate{_,_ in self.handleValidation()}
         row.onChange { v in
             self.player?.preferredPosition = PlayerPosition.fromDescription(term: v.value)
         }
@@ -67,6 +69,7 @@ class PlayerDetailsViewController: FormViewController {
         if let data = player?.profilePicture {
             row.value = UIImage(data: data)
         }
+        row.cellUpdate{_,_ in self.handleValidation()}
         row.onChange { v in
             let imageData:Data? = v.value?.jpegData(compressionQuality: 1.0)
             self.player?.profilePicture = imageData
@@ -85,7 +88,7 @@ class PlayerDetailsViewController: FormViewController {
         form.validate()
     }
     
-    private func handleValidation(cell: TextCell, row: TextRow) {
+    private func handleValidation() {
         saveButton.isEnabled = isFormValid()
     }
     

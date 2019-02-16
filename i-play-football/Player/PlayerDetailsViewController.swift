@@ -62,7 +62,7 @@ class PlayerDetailsViewController: FormViewController {
         }
     }
     
-    lazy var picture: ImageRow = ImageRow() { row in
+    lazy var pictureField: ImageRow = ImageRow() { row in
         row.title = "Add a photo"
         row.sourceTypes = [.PhotoLibrary, .SavedPhotosAlbum]
         row.clearAction = .yes(style: UIAlertAction.Style.destructive)
@@ -84,7 +84,7 @@ class PlayerDetailsViewController: FormViewController {
             <<< dateOfBirthField
             <<< preferredPositionField
             <<< notesField
-            <<< picture
+            <<< pictureField
         form.validate()
     }
     

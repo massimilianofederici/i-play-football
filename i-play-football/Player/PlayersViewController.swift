@@ -8,16 +8,16 @@ class PlayersViewController: UITableViewController {
     
     private var dbListener: TransactionObserver?
     
-    private var players: [Player] = []
+    private var players: [Player] = [] {
+        didSet {
+            self.tableView.reloadData()
+        }
+    }
     
     override func viewDidLoad() {
         dbListener = try! ValueObservation
-            .trackingAll(Player.all())
-            .start(in: dbQueue) { data in
-                self.players = data
-                self.tableView.reloadData()
-        }
-            
+            .trackingAll(Player.orderByName())
+            .start(in: dbQueue) {self.players = $0}
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -47,7 +47,9 @@ class PlayersViewController: UITableViewController {
             detailsController.player = Player(firstName: "", lastName: "", dateOfBirth: nil, preferredPosition: nil, profilePicture: nil, notes: "", id: nil)
         case "playerDetails":
             let selection: Int! = self.tableView.indexPathForSelectedRow?.row
-            detailsController.player = players[selection]
+            detailsController.player = try! dbQueue.read {db in
+                try Player.fetchOne(db, key: players[selection].id!)
+            }
         default:
             print(identifier as Any)
         }
@@ -58,7 +60,7 @@ class PlayersViewController: UITableViewController {
     
     @IBAction func saveOrUpdate(unwindSegue: UIStoryboardSegue) {
         let detailsController:PlayerDetailsViewController = unwindSegue.source as! PlayerDetailsViewController
-        let _ = try! dbQueue.write { db in
+        try! dbQueue.write { db in
             try detailsController.player?.save(db)
         }
     }

@@ -2,6 +2,10 @@ import Foundation
 import GRDB
 
 struct Player: Codable, FetchableRecord, MutablePersistableRecord {
+    
+    private static let FirstName = Column("firstName")
+    private static let LastName = Column("lastName")
+    private static let Id = Column("id")
 
     var firstName: String
     var lastName: String
@@ -13,6 +17,10 @@ struct Player: Codable, FetchableRecord, MutablePersistableRecord {
     
     var name: String {
         return "\(firstName) \(lastName)"
+    }
+    
+    static func orderByName() -> QueryInterfaceRequest<Player> {
+        return Player.order(Player.LastName, Player.FirstName).select(Player.LastName, Player.FirstName, Player.Id)
     }
 }
 

@@ -8,10 +8,8 @@ class TeamViewController: FormViewController {
     
     @IBOutlet weak var saveButton: UIBarButtonItem!
     
-    lazy var team: Team = { [unowned self] in
-        return try! dbQueue.read {db in
-            try Team.all().limit(1).fetchAll(db).first
-        } ?? Team.aTeam()
+    lazy var team: Team = {
+        return try! dbQueue.read {try Team.all().limit(1).fetchAll($0).first} ?? Team.aTeam()
         }()
     
     lazy var nameField: TextRow = TextRow() { row in
@@ -66,8 +64,6 @@ class TeamViewController: FormViewController {
     private func setInitialValues() {
         nameField.value = team.name
         coachField.value = team.coach
-        team.colour.map{UIColor($0)}.map{
-            colourField.value = $0
-        }
+        team.colour.map{UIColor($0)}.map{colourField.value = $0}
     }
 }

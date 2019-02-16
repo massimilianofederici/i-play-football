@@ -28,7 +28,7 @@ class CalendarViewController: UIViewController {
     
     func prefetchSchedules(from: Date) {
         schedules = try!dbQueue.read { db in
-            try Schedule.findWithin(DateInterval(start: from.startOfMonth(), end: from.endOfMonth())).fetchAll(db)
+            try Schedule.within(DateInterval(start: from.startOfMonth(), end: from.endOfMonth())).fetchAll(db)
         }
     }
     

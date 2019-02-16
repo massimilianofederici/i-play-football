@@ -15,7 +15,7 @@ class Schedule: Codable, FetchableRecord, MutablePersistableRecord {
     var categoryColor: String
     var id: Int?
     
-    static func findWithin(_ interval: DateInterval) -> QueryInterfaceRequest<Schedule> {
+    static func within(_ interval: DateInterval) -> QueryInterfaceRequest<Schedule> {
         return Schedule.filter(Column("startTime") >= interval.start && Column("endTime") <= interval.end)
     }
 }

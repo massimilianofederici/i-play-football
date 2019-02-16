@@ -1,11 +1,3 @@
-//
-//  AppDelegate.swift
-//  i-play-football
-//
-//  Created by Massimiliano Federici on 23/12/2018.
-//  Copyright © 2018 Massimiliano Federici. All rights reserved.
-//
-
 import UIKit
 import GRDB
 
@@ -50,7 +42,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         dbQueue = try AppDatabase.openDatabase(atPath: databaseURL.path)
         dbQueue.setupMemoryManagement(in: application)
     }
-
-
 }
 

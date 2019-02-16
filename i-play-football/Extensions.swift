@@ -1,11 +1,3 @@
-//
-//  Extensions.swift
-//  i-play-football
-//
-//  Created by Massimiliano Federici on 26/01/2019.
-//  Copyright © 2019 Massimiliano Federici. All rights reserved.
-//
-
 import Foundation
 
 extension Date {
@@ -28,15 +20,5 @@ extension Date {
     
     func isToday() -> Bool {
         return Calendar.current.isDateInToday(self)
-    }
-    
-    var millisecondsSince1970:Int {
-        return Int((self.timeIntervalSince1970 * 1000.0).rounded())
-    }
-}
-
-extension Array {
-    func randomValue() -> Element {
-        return self[Int(arc4random_uniform(UInt32(self.count)))]
     }
 }

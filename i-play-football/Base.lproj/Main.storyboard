@@ -378,7 +378,18 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="2VU-kH-8WT"/>
                     </view>
-                    <navigationItem key="navigationItem" id="cgn-nC-suV"/>
+                    <navigationItem key="navigationItem" id="Fo5-cf-iTt">
+                        <barButtonItem key="leftBarButtonItem" title="Today" id="Jsg-9u-10F">
+                            <connections>
+                                <action selector="showToday" destination="j41-ay-ann" id="j3n-kz-6k2"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="83G-IN-jLR">
+                            <connections>
+                                <action selector="addEvent" destination="j41-ay-ann" id="aLF-n3-GAT"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="calendarView" destination="Aa5-Wf-l4s" id="WLg-Gt-EMG"/>
                         <outlet property="separatorViewTopConstraint" destination="Yk6-dc-CWP" id="HBb-P7-YK1"/>

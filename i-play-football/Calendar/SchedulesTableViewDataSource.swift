@@ -3,6 +3,10 @@ import UIKit
 
 extension CalendarViewController: UITableViewDataSource {
     
+    @IBAction func addEvent() {
+        print("new event")
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: scheduleCellIdentifier, for: indexPath) as! ScheduleTableViewCell
         cell.selectionStyle = .none

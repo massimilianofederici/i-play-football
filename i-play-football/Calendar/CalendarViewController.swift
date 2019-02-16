@@ -13,12 +13,17 @@ class CalendarViewController: UIViewController {
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var separatorViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var todayButton: UIBarButtonItem!
     
     var schedules: [Schedule] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        showToday()
+    }
+    
+    @IBAction func showToday() {
         let today: Date = Date()
         prefetchSchedules(from: today)
         calendarView.scrollToDate(today, triggerScrollToDateDelegate: false, animateScroll: false, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
@@ -57,4 +62,5 @@ class CalendarViewController: UIViewController {
         let startDate: Date = calendarView.visibleDates().monthDates.first!.date
         navigationItem.title = dateFormatter.string(from: startDate)
     }
+    
 }

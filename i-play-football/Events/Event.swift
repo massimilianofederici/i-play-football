@@ -7,7 +7,7 @@ private var dateFormatter: DateFormatter = {
     return formatter
 }()
 
-class Schedule: Codable, FetchableRecord, MutablePersistableRecord {
+class Event: Codable, FetchableRecord, MutablePersistableRecord {
     var title: String
     var note: String
     var startTime: Date
@@ -15,14 +15,14 @@ class Schedule: Codable, FetchableRecord, MutablePersistableRecord {
     var categoryColor: String
     var id: Int?
     
-    static func within(_ interval: DateInterval) -> QueryInterfaceRequest<Schedule> {
-        return Schedule.filter(Column("startTime") >= interval.start && Column("endTime") <= interval.end)
+    static func within(_ interval: DateInterval) -> QueryInterfaceRequest<Event> {
+        return Event.filter(Column("startTime") >= interval.start && Column("endTime") <= interval.end)
     }
 }
 
-extension Array where Element: Schedule {
+extension Array where Element: Event {
 
-    subscript(_ date: Date) -> [Schedule] {
+    subscript(_ date: Date) -> [Event] {
         let formatted: String = dateFormatter.string(from: date)
         return self.filter{dateFormatter.string(from: $0.startTime) == formatted}
     }

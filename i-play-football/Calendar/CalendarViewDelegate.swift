@@ -19,7 +19,7 @@ extension CalendarViewController: JTAppleCalendarViewDelegate {
     // invoked on scrolling
     func calendar(_ calendar: JTAppleCalendarView, didScrollToDateSegmentWith visibleDates: DateSegmentInfo) {
         let firstDayOfMonth: Date = visibleDates.monthDates.first!.date
-        prefetchSchedules(from: firstDayOfMonth)
+        prefetchEvents(from: firstDayOfMonth)
         let dayToSelect = firstDayOfMonth.isThisMonth() ? Date() : firstDayOfMonth
         calendar.reloadData{ self.select(date: dayToSelect) }
     }
@@ -51,7 +51,7 @@ extension CalendarViewController: JTAppleCalendarViewDelegate {
         }
         cell.selectedView.isHidden = !cellState.isSelected
         
-        cell.eventView.isHidden = !schedules.hasEvent(for: cellState.date)
+        cell.eventView.isHidden = !events.hasEvent(for: cellState.date)
     }
     
     private func textColor(for cellState: CellState) -> UIColor {

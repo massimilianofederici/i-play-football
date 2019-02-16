@@ -8,14 +8,14 @@ class CalendarViewController: UIViewController {
         return formatter
     }()
     let calendarCellIdentifier = "calendarCell"
-    let scheduleCellIdentifier = "scheduleDetail"
+    let eventCellIdentifier = "eventDetail"
     
     @IBOutlet weak var calendarView: JTAppleCalendarView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var separatorViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var todayButton: UIBarButtonItem!
     
-    var schedules: [Schedule] = []
+    var events: [Event] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,15 +25,15 @@ class CalendarViewController: UIViewController {
     
     @IBAction func showToday() {
         let today: Date = Date()
-        prefetchSchedules(from: today)
+        prefetchEvents(from: today)
         calendarView.scrollToDate(today, triggerScrollToDateDelegate: false, animateScroll: false, preferredScrollPosition: nil, extraAddedOffset: 0) { [unowned self] in
             self.select(date: today)
         }
     }
     
-    func prefetchSchedules(from: Date) {
-        schedules = try!dbQueue.read { db in
-            try Schedule.within(DateInterval(start: from.startOfMonth(), end: from.endOfMonth())).fetchAll(db)
+    func prefetchEvents(from: Date) {
+        events = try!dbQueue.read { db in
+            try Event.within(DateInterval(start: from.startOfMonth(), end: from.endOfMonth())).fetchAll(db)
         }
     }
     
@@ -47,7 +47,7 @@ class CalendarViewController: UIViewController {
         let calendarCellView = UINib(nibName: "CalendarCell", bundle: Bundle.main)
         calendarView.register(calendarCellView, forCellWithReuseIdentifier: calendarCellIdentifier)
         let tableCellView = UINib(nibName: "ScheduleTableViewCell", bundle: Bundle.main)
-        tableView.register(tableCellView, forCellReuseIdentifier: scheduleCellIdentifier)
+        tableView.register(tableCellView, forCellReuseIdentifier: eventCellIdentifier)
     }
     
     private func adjustCalendarViewHeight() {

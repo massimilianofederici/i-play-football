@@ -1,6 +1,6 @@
 import UIKit
 
-class ScheduleTableViewCell: UITableViewCell {
+class EventTableViewCell: UITableViewCell {
 
     @IBOutlet weak var categoryLine: UIView!
     @IBOutlet weak var startTimeLabel: UILabel!
@@ -15,13 +15,13 @@ class ScheduleTableViewCell: UITableViewCell {
         return dateFormatter
     }()
     
-    var schedule: Schedule! {
+    var event: Event! {
         didSet {
-            titleLabel.text = schedule.title
-            noteLabel.text = schedule.note
-            startTimeLabel.text = dateFormatter.string(from: schedule.startTime)
-            endTimeLabel.text = dateFormatter.string(from: schedule.endTime)
-            categoryLine.backgroundColor = UIColor(schedule.categoryColor)
+            titleLabel.text = event.title
+            noteLabel.text = event.note
+            startTimeLabel.text = dateFormatter.string(from: event.startTime)
+            endTimeLabel.text = dateFormatter.string(from: event.endTime)
+            categoryLine.backgroundColor = UIColor(event.categoryColor)
         }
     }
 }

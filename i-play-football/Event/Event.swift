@@ -24,8 +24,12 @@ struct Event: Codable, FetchableRecord, MutablePersistableRecord {
 
 extension Event {
     static func anEvent(day: Date) -> Event {
-        let endTime = Calendar.current.date(byAdding: .hour, value: 2, to: day)
-        return Event(title: "", note: "", startTime: day.atThisTime(), endTime: endTime!, categoryColor: UIColor.red.hexString(), location: "", id: nil, type: EventType.match)
+        let startTime: Date = day.atThisTime()
+        let endTime: Date = Calendar.current.date(byAdding: .hour, value: 2, to: startTime)!
+        #warning("configure duration")
+        #warning("configure event type by default")
+        let eventType: EventType = EventType.match
+        return Event(title: "", note: "", startTime: startTime, endTime: endTime, categoryColor: eventType.color(), location: "", id: nil, type: eventType)
     }
 }
 
@@ -37,12 +41,12 @@ enum EventType: String, CaseIterable, Codable {
         return EventType.allCases.first(where: { p in p.rawValue == term})
     }
     
-    func color() -> UIColor {
+    func color() -> String {
         switch self {
         case .match:
-            return .red
+            return UIColor.red.hexString()
         case .training:
-            return .green
+            return UIColor.green.hexString()
         }
     }
 }

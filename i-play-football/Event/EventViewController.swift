@@ -18,7 +18,7 @@ class EventViewController: FormViewController {
         row.value = event?.type.rawValue
         row.onChange { v in
             let type = EventType.fromDescription(term: v.value)!
-            let color = type.color().hexString()
+            let color = type.color()
             self.event?.type = type
             self.event?.categoryColor = color
         }
@@ -81,6 +81,7 @@ class EventViewController: FormViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = self.event?.id != nil ? "Edit Event" : "New Event"
         form +++ Section()
             <<< eventTypeField
             <<< titleField

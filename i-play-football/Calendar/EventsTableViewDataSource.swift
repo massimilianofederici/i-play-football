@@ -10,8 +10,10 @@ extension CalendarViewController: UITableViewDataSource {
         case "newEvent":
             let newEvent = Event.anEvent(day: self.calendarView.selectedDates.first!)
             eventDetailsController.event = newEvent
+        case "editEvent":
+            eventDetailsController.event = sender as? Event
         default:
-            print("Invalid")
+            print("Invalid identifier \(String(describing: segue.identifier))")
         }
     }
     

@@ -216,7 +216,7 @@
             </objects>
             <point key="canvasLocation" x="168.75" y="939.08450704225356"/>
         </scene>
-        <!--New Event-->
+        <!--Event View Controller-->
         <scene sceneID="abp-HU-GhW">
             <objects>
                 <viewController id="BcZ-Ls-GUS" customClass="EventViewController" customModule="i_play_football" customModuleProvider="target" sceneMemberID="viewController">
@@ -226,14 +226,14 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="oN8-pF-cFG"/>
                     </view>
-                    <navigationItem key="navigationItem" title="New Event" id="YrX-Lc-l2u">
+                    <navigationItem key="navigationItem" id="YrX-Lc-l2u">
                         <barButtonItem key="backBarButtonItem" title="Cancel" id="G5f-ne-KDZ"/>
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="XBQ-GL-GM5">
                             <connections>
                                 <segue destination="Dbr-AF-ewl" kind="unwind" unwindAction="cancelChangesWithEventDetails:" id="I8b-zI-tln"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Add" id="lpR-rq-GuD">
+                        <barButtonItem key="rightBarButtonItem" title="Done" id="lpR-rq-GuD">
                             <connections>
                                 <segue destination="Dbr-AF-ewl" kind="unwind" unwindAction="saveOrUpdateWithEventDetails:" id="KcL-fL-S5K"/>
                             </connections>
@@ -362,7 +362,7 @@
                                 <rect key="frame" x="0.0" y="416" width="320" height="108"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="eventDetail" rowHeight="50" id="nFX-Ec-yD6" customClass="EventTableViewCell" customModule="i_play_football" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="eventDetail" rowHeight="50" id="nFX-Ec-yD6" customClass="EventTableViewCell" customModule="i_play_football" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nFX-Ec-yD6" id="BT4-99-px1">
@@ -426,6 +426,7 @@
                         <outlet property="calendarView" destination="Aa5-Wf-l4s" id="WLg-Gt-EMG"/>
                         <outlet property="separatorViewTopConstraint" destination="Yk6-dc-CWP" id="HBb-P7-YK1"/>
                         <outlet property="tableView" destination="B8f-8U-OK8" id="b5O-8O-TQc"/>
+                        <segue destination="QG3-pr-hgx" kind="showDetail" identifier="editEvent" id="fSD-CU-2Vj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vfd-Ua-GiE" sceneMemberID="firstResponder"/>
@@ -476,6 +477,7 @@
         <image name="team" width="16.5" height="16.5"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="fSD-CU-2Vj"/>
         <segue reference="Qut-wT-Heg"/>
     </inferredMetricsTieBreakers>
 </document>

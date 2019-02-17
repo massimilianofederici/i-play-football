@@ -89,7 +89,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mCm-Kx-yic" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-748" y="-567"/>
+            <point key="canvasLocation" x="249.375" y="-567.25352112676057"/>
         </scene>
         <!--Players-->
         <scene sceneID="vcd-aS-kkU">
@@ -143,12 +143,12 @@
                     <navigationItem key="navigationItem" id="aqn-Oq-NWL">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="Rbi-aZ-B3Z">
                             <connections>
-                                <segue destination="Lfd-T5-zu2" kind="unwind" unwindAction="cancelChangesWithUnwindSegue:" id="THE-Ff-tAM"/>
+                                <segue destination="Lfd-T5-zu2" kind="unwind" unwindAction="cancelChangesWithPlayerDetails:" id="xTQ-6e-cKf"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Done" id="DFo-cc-SZQ">
                             <connections>
-                                <segue destination="Lfd-T5-zu2" kind="unwind" unwindAction="saveOrUpdateWithUnwindSegue:" id="re9-wI-Rts"/>
+                                <segue destination="Lfd-T5-zu2" kind="unwind" unwindAction="saveOrUpdateWithPlayerDetails:" id="E5T-ho-fR7"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -215,6 +215,38 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bca-aJ-14m" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="168.75" y="939.08450704225356"/>
+        </scene>
+        <!--New Event-->
+        <scene sceneID="abp-HU-GhW">
+            <objects>
+                <viewController id="BcZ-Ls-GUS" customClass="EventViewController" customModule="i_play_football" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="wYF-qY-qrE">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="oN8-pF-cFG"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="New Event" id="YrX-Lc-l2u">
+                        <barButtonItem key="backBarButtonItem" title="Cancel" id="G5f-ne-KDZ"/>
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="XBQ-GL-GM5">
+                            <connections>
+                                <segue destination="Dbr-AF-ewl" kind="unwind" unwindAction="cancelChangesWithEventDetails:" id="I8b-zI-tln"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Add" id="lpR-rq-GuD">
+                            <connections>
+                                <segue destination="Dbr-AF-ewl" kind="unwind" unwindAction="saveOrUpdateWithEventDetails:" id="KcL-fL-S5K"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="saveButton" destination="lpR-rq-GuD" id="Jgn-Ku-q2W"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Pwd-5w-sX4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Dbr-AF-ewl" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="-3510" y="-767"/>
         </scene>
         <!--Ib Calendar Data Source-->
         <scene sceneID="yWm-bE-W49">
@@ -330,7 +362,7 @@
                                 <rect key="frame" x="0.0" y="416" width="320" height="108"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="scheduleDetail" rowHeight="50" id="nFX-Ec-yD6" customClass="ScheduleTableViewCell" customModule="i_play_football" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="eventDetail" rowHeight="50" id="nFX-Ec-yD6" customClass="EventTableViewCell" customModule="i_play_football" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nFX-Ec-yD6" id="BT4-99-px1">
@@ -386,7 +418,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="83G-IN-jLR">
                             <connections>
-                                <action selector="addEvent" destination="j41-ay-ann" id="aLF-n3-GAT"/>
+                                <segue destination="QG3-pr-hgx" kind="show" identifier="newEvent" id="kZ5-iw-jS4"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -398,7 +430,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vfd-Ua-GiE" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2499" y="-766"/>
+            <point key="canvasLocation" x="-1501.875" y="-766.90140845070425"/>
         </scene>
         <!--Calendar-->
         <scene sceneID="ev9-Zo-l9o">
@@ -416,7 +448,25 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="J0k-nU-bfg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1763" y="-926"/>
+            <point key="canvasLocation" x="-766.875" y="-926.4084507042254"/>
+        </scene>
+        <!--Event View Wrapper-->
+        <scene sceneID="uqb-i1-ukI">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="QG3-pr-hgx" userLabel="Event View Wrapper" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Mc0-jZ-tzP">
+                        <rect key="frame" x="0.0" y="20" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BcZ-Ls-GUS" kind="relationship" relationship="rootViewController" id="3Wz-in-l1c"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pAR-Dy-CFa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2396" y="-767"/>
         </scene>
     </scenes>
     <resources>
@@ -426,6 +476,6 @@
         <image name="team" width="16.5" height="16.5"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="r1B-nd-i1P"/>
+        <segue reference="Qut-wT-Heg"/>
     </inferredMetricsTieBreakers>
 </document>

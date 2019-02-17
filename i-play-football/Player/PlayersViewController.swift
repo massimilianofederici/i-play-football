@@ -4,8 +4,6 @@ import GRDB
 
 class PlayersViewController: UITableViewController {
     
-    @IBOutlet weak var addButton: UIBarButtonItem!
-    
     private var dbListener: TransactionObserver?
     
     private var players: [Player] = [] {
@@ -55,11 +53,11 @@ class PlayersViewController: UITableViewController {
         }
     }
     
-    @IBAction func cancelChanges(unwindSegue: UIStoryboardSegue) {
+    @IBAction func cancelChanges(playerDetails: UIStoryboardSegue) {
     }
     
-    @IBAction func saveOrUpdate(unwindSegue: UIStoryboardSegue) {
-        let detailsController:PlayerDetailsViewController = unwindSegue.source as! PlayerDetailsViewController
+    @IBAction func saveOrUpdate(playerDetails: UIStoryboardSegue) {
+        let detailsController:PlayerDetailsViewController = playerDetails.source as! PlayerDetailsViewController
         try! dbQueue.write { db in
             try detailsController.player?.save(db)
         }

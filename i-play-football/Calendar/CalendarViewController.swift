@@ -46,7 +46,7 @@ class CalendarViewController: UIViewController {
     private func setup() {
         let calendarCellView = UINib(nibName: "CalendarCell", bundle: Bundle.main)
         calendarView.register(calendarCellView, forCellWithReuseIdentifier: calendarCellIdentifier)
-        let tableCellView = UINib(nibName: "ScheduleTableViewCell", bundle: Bundle.main)
+        let tableCellView = UINib(nibName: "EventTableViewCell", bundle: Bundle.main)
         tableView.register(tableCellView, forCellReuseIdentifier: eventCellIdentifier)
     }
     

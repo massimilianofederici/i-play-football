@@ -18,6 +18,12 @@ extension Date {
         return Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: Calendar.current.startOfDay(for: self)))!
     }
     
+    func atThisTime() -> Date {
+        let now: Date = Date()
+        let hours = Calendar.current.dateComponents([.hour], from: now).hour!
+        return Calendar.current.date(bySetting: .hour, value: hours, of: self)!
+    }
+    
     func isToday() -> Bool {
         return Calendar.current.isDateInToday(self)
     }

@@ -3,8 +3,29 @@ import UIKit
 
 extension CalendarViewController: UITableViewDataSource {
     
-    @IBAction func addEvent() {
-        print("new event")
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let next : UINavigationController = segue.destination as! UINavigationController
+        let eventDetailsController:EventViewController = next.topViewController as! EventViewController
+        switch segue.identifier {
+        case "newEvent":
+            let newEvent = Event.anEvent(day: self.calendarView.selectedDates.first!)
+            eventDetailsController.event = newEvent
+        default:
+            print("Invalid")
+        }
+    }
+    
+    @IBAction func cancelChanges(eventDetails: UIStoryboardSegue) {
+    }
+    
+    @IBAction func saveOrUpdate(eventDetails: UIStoryboardSegue) {
+        let detailsController:EventViewController = eventDetails.source as! EventViewController
+        var event = detailsController.event!
+        try! dbQueue.write { db in
+            try event.save(db)
+        }
+        prefetchEvents(from: event.startTime.startOfMonth())
+        select(date: event.startTime)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

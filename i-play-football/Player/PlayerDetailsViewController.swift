@@ -10,7 +10,6 @@ class PlayerDetailsViewController: FormViewController {
     @IBOutlet weak var saveButton: UIBarButtonItem!
     
     lazy var firstNameField: TextRow = TextRow() { row in
-        row.title = "First Name *"
         row.placeholder = "First Name"
         row.add(rule: RuleRequired())
         row.value = player?.firstName
@@ -22,7 +21,6 @@ class PlayerDetailsViewController: FormViewController {
     }
     
     lazy var lastNameField: TextRow = TextRow() { row in
-        row.title = "Last Name *"
         row.placeholder = "Last Name"
         row.add(rule: RuleRequired())
         row.value = player?.lastName
@@ -34,7 +32,6 @@ class PlayerDetailsViewController: FormViewController {
     }
     
     lazy var notesField: TextAreaRow = TextAreaRow() { row in
-        row.title = "Notes"
         row.placeholder = "Notes"
         row.value = player?.notes
         row.cellUpdate{_,_ in self.handleValidation()}

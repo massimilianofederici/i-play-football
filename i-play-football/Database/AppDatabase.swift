@@ -42,7 +42,9 @@ struct AppDatabase {
                 t.column("title", .text).notNull()
                 t.column("endTime", .date).notNull()
                 t.column("note", .text)
+                t.column("location", .text).notNull()
                 t.column("categoryColor", .text).notNull()
+                t.column("type", .text)
             }
         }
         return migrator

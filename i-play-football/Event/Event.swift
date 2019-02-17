@@ -25,8 +25,8 @@ struct Event: Codable, FetchableRecord, MutablePersistableRecord {
 extension Event {
     static func anEvent(day: Date) -> Event {
         let startTime: Date = day.atThisTime()
-        let endTime: Date = Calendar.current.date(byAdding: .hour, value: 2, to: startTime)!
-        #warning("configure duration")
+        let defaultDuration: Int = UserDefaults.standard.integer(forKey: "eventDuration")
+        let endTime: Date = Calendar.current.date(byAdding: .minute, value: defaultDuration, to: startTime)!
         #warning("configure event type by default")
         let eventType: EventType = EventType.match
         return Event(title: "", note: "", startTime: startTime, endTime: endTime, categoryColor: eventType.color(), location: "", id: nil, type: eventType)
